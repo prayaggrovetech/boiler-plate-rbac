@@ -136,3 +136,16 @@ This document outlines the requirements for a production-ready micro SaaS boiler
 3. THE Admin UI SHALL only display management features to users with administrative permissions
 4. WHERE permission checks are needed, THE RBAC System SHALL provide both client and server-side validation
 5. THE Dashboard Layout SHALL gracefully handle permission changes during active sessions
+
+### Requirement 11
+
+**User Story:** As a user, I want dark mode support with theme persistence, so that I can use the application in my preferred visual theme.
+
+#### Acceptance Criteria
+
+1. THE Dashboard Layout SHALL provide a theme toggle button accessible from the user menu
+2. THE Public Layout SHALL include theme switching functionality in the header navigation
+3. WHEN a user toggles the theme, THE NextAuth System SHALL persist the theme preference in localStorage
+4. THE Dashboard Layout SHALL apply dark mode styles consistently across all components and pages
+5. WHERE the user returns to the application, THE NextAuth System SHALL restore the previously selected theme
+6. THE Public Layout SHALL support both light and dark themes with proper contrast ratios for accessibility

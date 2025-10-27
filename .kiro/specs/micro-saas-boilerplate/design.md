@@ -331,6 +331,53 @@ export async function middleware(request: NextRequest) {
 - Loading states (Spinner, Skeleton)
 - Alert/Toast notifications
 
+#### Theme System Design
+
+The application uses a comprehensive dark mode implementation with:
+
+```typescript
+// lib/theme/types.ts
+export type Theme = 'light' | 'dark' | 'system';
+
+export interface ThemeConfig {
+  theme: Theme;
+  systemTheme: 'light' | 'dark';
+  resolvedTheme: 'light' | 'dark';
+}
+```
+
+#### Theme Provider Implementation
+
+```typescript
+// components/theme/ThemeProvider.tsx
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>('system');
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
+  
+  // Theme persistence and system detection logic
+  // Automatic theme switching based on system preferences
+  // Local storage persistence for user preferences
+}
+```
+
+#### TailwindCSS Dark Mode Configuration
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        // CSS custom properties for theme-aware colors
+      }
+    }
+  }
+}
+```
+
 #### RBAC-Aware Components
 
 ```typescript

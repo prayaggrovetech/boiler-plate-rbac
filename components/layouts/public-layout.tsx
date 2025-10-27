@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { ThemeToggleButton } from "@/components/theme"
 
 export interface PublicLayoutProps {
   children: React.ReactNode
@@ -63,6 +64,7 @@ function PublicHeader() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggleButton />
             {session ? (
               <Button asChild>
                 <Link href="/dashboard">Dashboard</Link>
@@ -111,6 +113,9 @@ function PublicHeader() {
                 </Link>
               ))}
               <div className="pt-4 border-t border-gray-200 space-y-2">
+                <div className="flex justify-center pb-2">
+                  <ThemeToggleButton />
+                </div>
                 {session ? (
                   <Button className="w-full" asChild>
                     <Link href="/dashboard">Dashboard</Link>

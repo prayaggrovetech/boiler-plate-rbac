@@ -27,6 +27,7 @@ import {
   Search,
   ChevronRight
 } from "lucide-react"
+import { ThemeToggle } from "@/components/theme"
 import { cn } from "@/lib/utils"
 
 export interface DashboardLayoutProps {
@@ -37,7 +38,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50 flex w-full overflow-hidden">
+    <div className="min-h-screen bg-background flex w-full overflow-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -48,7 +49,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-48 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
+        "fixed inset-y-0 left-0 z-50 w-48 bg-card shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <DashboardSidebar onClose={() => setSidebarOpen(false)} />
@@ -85,7 +86,7 @@ function DashboardSidebar({ onClose }: DashboardSidebarProps) {
           <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">MS</span>
           </div>
-          <span className="font-bold text-xl text-gray-900">Micro SaaS</span>
+          <span className="font-bold text-xl text-foreground">Micro SaaS</span>
         </Link>
         <button
           onClick={onClose}
@@ -106,10 +107,10 @@ function DashboardSidebar({ onClose }: DashboardSidebarProps) {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-foreground truncate">
                 {session.user.name || "Unknown User"}
               </p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-muted-foreground truncate">
                 {session.user.email}
               </p>
               {session.user.roles && session.user.roles.length > 0 && (
@@ -167,13 +168,13 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const { data: session } = useSession()
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-card shadow-sm border-b">
       <div className="w-full px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Mobile menu button */}
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600"
+            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-foreground"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -181,19 +182,22 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           {/* Search bar (placeholder) */}
           <div className="hidden md:flex flex-1 max-w-lg mx-8">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
               />
             </div>
           </div>
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {/* Theme toggle */}
+            <ThemeToggle />
+
             {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-gray-600 relative">
+            <button className="p-2 text-muted-foreground hover:text-foreground relative">
               <Bell className="h-5 w-5" />
               <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
             </button>
@@ -256,7 +260,7 @@ function UserMenu({ user }: UserMenuProps) {
   return (
     <Modal>
       <ModalTrigger asChild>
-        <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100">
+        <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-accent">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user.image || undefined} />
             <AvatarFallback>

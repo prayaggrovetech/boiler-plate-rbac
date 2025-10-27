@@ -180,7 +180,7 @@
   - Test API error response handling
   - _Requirements: 9.1_
 
-- [ ] 15. Configure Docker deployment setup
+- [x] 15. Configure Docker deployment setup
   - Create Dockerfile with multi-stage builds for development and production
   - Set up docker-compose.yml for local development with PostgreSQL
   - Configure production Docker setup with environment variables
@@ -223,3 +223,31 @@
   - Implement final UI polish and responsive design improvements
   - Add example data seeding for demonstration purposes
   - _Requirements: 7.4, 8.5_
+
+- [-] 19. Implement dark mode theme system
+  - Create theme provider with React Context for theme state management
+  - Implement theme persistence using localStorage with system preference detection
+  - Configure TailwindCSS dark mode with CSS custom properties
+  - Create theme toggle component with light/dark/system options
+  - Update all UI components to support dark mode variants
+  - _Requirements: 11.1, 11.3, 11.5_
+
+- [ ] 19.1 Add theme toggle to layouts
+  - Integrate theme toggle button in dashboard layout user menu
+  - Add theme switcher to public layout header navigation
+  - Implement smooth theme transition animations
+  - Ensure theme toggle accessibility with proper ARIA labels
+  - _Requirements: 11.1, 11.2_
+
+- [ ] 19.2 Update component library for dark mode
+  - Add dark mode variants to Button, Card, Modal, and form components
+  - Update loading states and alert components with dark theme support
+  - Ensure proper contrast ratios for accessibility compliance
+  - Test all components in both light and dark themes
+  - _Requirements: 11.4, 11.6_
+
+- [ ]* 19.3 Write tests for theme functionality
+  - Test theme provider state management and persistence
+  - Test theme toggle component behavior
+  - Test component rendering in different themes
+  - _Requirements: 9.1_
