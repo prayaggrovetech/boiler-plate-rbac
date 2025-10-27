@@ -7,6 +7,7 @@ import {
   Users, 
   BarChart3, 
   TrendingUp,
+  TrendingDown,
   Activity,
   UserCheck,
   AlertTriangle,
@@ -17,33 +18,60 @@ import Link from "next/link"
 
 export function ManagerDashboard() {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Manager Dashboard</h1>
-          <p className="text-gray-600 mt-2">
-            Team management and operational oversight
-          </p>
+    <div className="space-y-6 w-full min-w-0">
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 rounded-2xl p-8 text-white">
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <Users className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold">Manager Dashboard</h1>
+              </div>
+              <p className="text-violet-100 text-lg mb-4">
+                Team management and operational oversight
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-violet-100">24 Team Members</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-violet-200" />
+                  <span className="text-sm text-violet-100">8 Active Projects</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-violet-200" />
+                  <span className="text-sm text-violet-100">87% Completion Rate</span>
+                </div>
+              </div>
+            </div>
+            <div className="hidden lg:flex flex-col gap-3">
+              <Link href="/manager/reports">
+                <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
+                  <FileText className="h-4 w-4 mr-2" />
+                  View Reports
+                </Button>
+              </Link>
+              <Link href="/manager/team">
+                <Button className="bg-white text-violet-600 hover:bg-white/90">
+                  <Users className="h-4 w-4 mr-2" />
+                  Manage Team
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Link href="/manager/reports">
-            <Button variant="outline">
-              <FileText className="h-4 w-4 mr-2" />
-              View Reports
-            </Button>
-          </Link>
-          <Link href="/manager/team">
-            <Button>
-              <Users className="h-4 w-4 mr-2" />
-              Manage Team
-            </Button>
-          </Link>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-white/5 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:18px_18px]"></div>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4xl:grid-cols-10 gap-3">
         <StatsCard
           title="Team Members"
           value="24"
@@ -75,7 +103,7 @@ export function ManagerDashboard() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4">
         {/* Team Performance */}
         <Card>
           <CardHeader>
@@ -156,7 +184,7 @@ export function ManagerDashboard() {
       </div>
 
       {/* Management Tools */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4xl:grid-cols-10 gap-3">
         <ManagementCard
           title="Team Management"
           description="Manage team members and assignments"
@@ -230,24 +258,37 @@ interface StatsCardProps {
 
 function StatsCard({ title, value, change, changeType, icon }: StatsCardProps) {
   const changeColor = {
-    positive: "text-green-600",
-    negative: "text-red-600",
-    neutral: "text-gray-600"
+    positive: "text-green-600 bg-green-50",
+    negative: "text-red-600 bg-red-50",
+    neutral: "text-gray-600 bg-gray-50"
+  }[changeType]
+
+  const iconBgColor = {
+    positive: "bg-green-100",
+    negative: "bg-red-100", 
+    neutral: "bg-gray-100"
   }[changeType]
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
-            <p className={`text-sm ${changeColor}`}>
-              {change} from last month
-            </p>
-          </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            {icon}
+    <Card className="hover:shadow-lg transition-all duration-200 border-0 shadow-sm bg-gradient-to-br from-white to-gray-50/30">
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`p-1.5 rounded-lg ${iconBgColor}`}>
+                {icon}
+              </div>
+              <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{title}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-gray-900 leading-none">{value}</p>
+              <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${changeColor}`}>
+                {changeType === 'positive' && <TrendingUp className="h-3 w-3" />}
+                {changeType === 'negative' && <TrendingDown className="h-3 w-3" />}
+                {changeType === 'neutral' && <BarChart3 className="h-3 w-3" />}
+                <span>{change} from last month</span>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>

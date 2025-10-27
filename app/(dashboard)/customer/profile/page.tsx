@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -52,8 +51,7 @@ export default function CustomerProfile() {
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-0">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -309,6 +307,5 @@ export default function CustomerProfile() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   )
 }

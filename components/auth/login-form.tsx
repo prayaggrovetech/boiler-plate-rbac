@@ -40,14 +40,10 @@ export function LoginForm() {
   // Redirect authenticated users to their dashboard
   useEffect(() => {
     if (status === "authenticated" && session?.user?.roles) {
-      const roles = session.user.roles.map((role: any) => role.name)
-      
-      const redirectPath = "/dashboard"
-      
       // Use the callback URL if it's not a login/signup page
       const finalRedirect = callbackUrl && !callbackUrl.includes('/login') && !callbackUrl.includes('/signup') 
         ? callbackUrl 
-        : redirectPath
+        : '/dashboard'
       
       router.push(finalRedirect)
     }
@@ -121,7 +117,7 @@ export function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl })
+      await signIn("google", { callbackUrl: callbackUrl })
     } catch (error) {
       toast({
         variant: "destructive",

@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { 
   Table,
@@ -18,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -29,308 +30,541 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/use-toast"
 import { 
   Users, 
   Plus, 
-  Search,
+  Search, 
+  MoreHorizontal,
   Edit,
-  Shield,
-  MoreHorizontal
+  Trash2,
+  UserPlus,
+  Loader2,
+  Eye,
+  EyeOff
 } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
-import { CreateUserDialog } from "@/components/admin/create-user-dialog"
-import { EditUserRolesDialog } from "@/components/admin/edit-user-roles-dialog"
+
+// Mock data for now - will be replaced with real API calls
+const mockUsers = [
+  {
+    id: "1",
+    name: "John Doe",
+    email: "john@example.com",
+    roles: [{ id: "1", name: "admin" }],
+    createdAt: "2024-01-15T10:30:00Z",
+    isActive: true
+  },
+  {
+    id: "2", 
+    name: "Jane Smith",
+    email: "jane@example.com",
+    roles: [{ id: "2", name: "manager" }],
+    createdAt: "2024-01-14T15:45:00Z",
+    isActive: true
+  },
+  {
+    id: "3",
+    name: "Bob Johnson", 
+    email: "bob@example.com",
+    roles: [{ id: "3", name: "customer" }],
+    createdAt: "2024-01-13T09:20:00Z",
+    isActive: false
+  }
+]
+
+const mockRoles = [
+  { id: "1", name: "admin", description: "Full system access" },
+  { id: "2", name: "manager", description: "Team management access" },
+  { id: "3", name: "customer", description: "Basic user access" }
+]
 
 interface User {
   id: string
+  name: string
   email: string
-  name: string | null
-  image: string | null
-  emailVerified: Date | null
-  createdAt: Date
-  updatedAt: Date
   roles: Array<{
     id: string
     name: string
-    description: string | null
   }>
+  createdAt: string
+  isActive: boolean
 }
 
 interface Role {
   id: string
   name: string
-  description: string | null
+  description?: string
 }
 
-export default function UsersManagement() {
-  const [users, setUsers] = useState<User[]>([])
-  const [roles, setRoles] = useState<Role[]>([])
-  const [loading, setLoading] = useState(true)
+interface CreateUserForm {
+  name: string
+  email: string
+  password: string
+  roleIds: string[]
+}
+
+interface EditUserForm {
+  name: string
+  email: string
+  roleIds: string[]
+  isActive: boolean
+}
+
+export default function AdminUsersPage() {
+  const [users, setUsers] = useState<User[]>(mockUsers)
+  const [allRoles, setAllRoles] = useState<Role[]>(mockRoles)
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedRole, setSelectedRole] = useState<string>("all")
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [selectedRole, setSelectedRole] = useState("all")
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
-  const [editRolesDialogOpen, setEditRolesDialogOpen] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const [createForm, setCreateForm] = useState<CreateUserForm>({
+    name: '',
+    email: '',
+    password: '',
+    roleIds: []
+  })
+
+  const [editForm, setEditForm] = useState<EditUserForm>({
+    name: '',
+    email: '',
+    roleIds: [],
+    isActive: true
+  })
+
   const { toast } = useToast()
 
-  useEffect(() => {
-    fetchUsers()
-    fetchRoles()
-  }, [page, searchTerm, selectedRole])
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesRole = selectedRole === "all" || !selectedRole || user.roles.some(role => role.name === selectedRole)
+    return matchesSearch && matchesRole
+  })
 
-  const fetchUsers = async () => {
+  const handleCreateUser = async () => {
+    setLoading(true)
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "10",
-        ...(searchTerm && { search: searchTerm }),
-        ...(selectedRole && selectedRole !== "all" && { role: selectedRole })
-      })
-
-      const response = await fetch(`/api/users?${params}`)
-      if (!response.ok) throw new Error("Failed to fetch users")
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
-      const data = await response.json()
-      setUsers(data.users)
-      setTotalPages(data.pagination.pages)
+      const newUser: User = {
+        id: Date.now().toString(),
+        name: createForm.name,
+        email: createForm.email,
+        roles: allRoles.filter(role => createForm.roleIds.includes(role.id)),
+        createdAt: new Date().toISOString(),
+        isActive: true
+      }
+      
+      setUsers(prev => [newUser, ...prev])
+      setCreateDialogOpen(false)
+      setCreateForm({ name: '', email: '', password: '', roleIds: [] })
+      
+      toast({
+        title: 'Success',
+        description: 'User created successfully'
+      })
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to fetch users",
-        variant: "destructive"
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to create user'
       })
     } finally {
       setLoading(false)
     }
   }
 
-  const fetchRoles = async () => {
+  const handleEditUser = async () => {
+    if (!selectedUser) return
+
+    setLoading(true)
     try {
-      const response = await fetch("/api/roles")
-      if (!response.ok) throw new Error("Failed to fetch roles")
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
-      const data = await response.json()
-      setRoles(data.roles)
+      setUsers(prev => prev.map(user => 
+        user.id === selectedUser.id 
+          ? {
+              ...user,
+              name: editForm.name,
+              email: editForm.email,
+              roles: allRoles.filter(role => editForm.roleIds.includes(role.id)),
+              isActive: editForm.isActive
+            }
+          : user
+      ))
+      
+      setEditDialogOpen(false)
+      setSelectedUser(null)
+      
+      toast({
+        title: 'Success',
+        description: 'User updated successfully'
+      })
     } catch (error) {
-      console.error("Failed to fetch roles:", error)
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to update user'
+      })
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handleUserCreated = (newUser: User) => {
-    setUsers(prev => [newUser, ...prev])
-    setCreateDialogOpen(false)
-    toast({
-      title: "Success",
-      description: "User created successfully"
-    })
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user?')) return
+
+    setLoading(true)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      setUsers(prev => prev.filter(user => user.id !== userId))
+      
+      toast({
+        title: 'Success',
+        description: 'User deleted successfully'
+      })
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to delete user'
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleRolesUpdated = (updatedUser: User) => {
-    setUsers(prev => prev.map(user => 
-      user.id === updatedUser.id ? updatedUser : user
-    ))
-    setEditRolesDialogOpen(false)
-    setSelectedUser(null)
-    toast({
-      title: "Success",
-      description: "User roles updated successfully"
-    })
-  }
-
-  const openEditRoles = (user: User) => {
+  const openEditDialog = (user: User) => {
     setSelectedUser(user)
-    setEditRolesDialogOpen(true)
-  }
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Loading users...</p>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
+    setEditForm({
+      name: user.name,
+      email: user.email,
+      roleIds: user.roles.map(role => role.id),
+      isActive: user.isActive
+    })
+    setEditDialogOpen(true)
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-            <p className="text-gray-600 mt-2">
-              Manage user accounts and role assignments
-            </p>
-          </div>
-          <Button onClick={() => setCreateDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Create User
-          </Button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+          <p className="text-gray-600 mt-2">
+            Manage user accounts and role assignments
+          </p>
         </div>
-
-        {/* Filters */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
+        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add User
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New User</DialogTitle>
+              <DialogDescription>
+                Add a new user to the system with appropriate roles.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="create-name">Full Name</Label>
+                <Input
+                  id="create-name"
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Enter full name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="create-email">Email Address</Label>
+                <Input
+                  id="create-email"
+                  type="email"
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter email address"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="create-password">Password</Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
-                    placeholder="Search users by name or email..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    id="create-password"
+                    type={showPassword ? "text" : "password"}
+                    value={createForm.password}
+                    onChange={(e) => setCreateForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Enter password"
                   />
-                </div>
-              </div>
-              <Select value={selectedRole} onValueChange={setSelectedRole}>
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Filter by role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All roles</SelectItem>
-                  {roles.map((role) => (
-                    <SelectItem key={role.id} value={role.name}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Users Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Users ({users.length})
-            </CardTitle>
-            <CardDescription>
-              Manage user accounts and their role assignments
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Roles</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-blue-600">
-                              {user.name?.charAt(0) || user.email.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium">{user.name || "No name"}</p>
-                            <p className="text-sm text-gray-500">{user.id}</p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {user.roles.map((role) => (
-                            <Badge key={role.id} variant="secondary">
-                              {role.name}
-                            </Badge>
-                          ))}
-                          {user.roles.length === 0 && (
-                            <Badge variant="outline">No roles</Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.emailVerified ? "success" : "secondary"}>
-                          {user.emailVerified ? "Verified" : "Unverified"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => openEditRoles(user)}
-                        >
-                          <Shield className="h-4 w-4 mr-1" />
-                          Edit Roles
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4">
-                <p className="text-sm text-gray-600">
-                  Page {page} of {totalPages}
-                </p>
-                <div className="flex gap-2">
                   <Button
-                    variant="outline"
+                    type="button"
+                    variant="ghost"
                     size="sm"
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                    disabled={page === 1}
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                  >
-                    Next
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Create User Dialog */}
-        <CreateUserDialog
-          open={createDialogOpen}
-          onOpenChange={setCreateDialogOpen}
-          onUserCreated={handleUserCreated}
-          roles={roles}
-        />
-
-        {/* Edit User Roles Dialog */}
-        {selectedUser && (
-          <EditUserRolesDialog
-            open={editRolesDialogOpen}
-            onOpenChange={setEditRolesDialogOpen}
-            user={selectedUser}
-            roles={roles}
-            onRolesUpdated={handleRolesUpdated}
-          />
-        )}
+              <div className="space-y-2">
+                <Label>Roles</Label>
+                <div className="space-y-2">
+                  {allRoles.map(role => (
+                    <div key={role.id} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`create-role-${role.id}`}
+                        checked={createForm.roleIds.includes(role.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setCreateForm(prev => ({ 
+                              ...prev, 
+                              roleIds: [...prev.roleIds, role.id] 
+                            }))
+                          } else {
+                            setCreateForm(prev => ({ 
+                              ...prev, 
+                              roleIds: prev.roleIds.filter(id => id !== role.id) 
+                            }))
+                          }
+                        }}
+                        className="rounded"
+                      />
+                      <Label htmlFor={`create-role-${role.id}`} className="text-sm">
+                        {role.name}
+                        {role.description && (
+                          <span className="text-gray-500 ml-1">- {role.description}</span>
+                        )}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleCreateUser} disabled={loading}>
+                {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Create User
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-    </DashboardLayout>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search users by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Roles</SelectItem>
+                {allRoles.map(role => (
+                  <SelectItem key={role.id} value={role.name}>
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Users Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Users ({filteredUsers.length})
+          </CardTitle>
+          <CardDescription>
+            Manage user accounts, roles, and permissions
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>User</TableHead>
+                <TableHead>Roles</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead className="w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredUsers.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{user.name}</div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {user.roles.map((role) => (
+                        <Badge key={role.id} variant="secondary">
+                          {role.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={user.isActive ? "default" : "secondary"}>
+                      {user.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => openEditDialog(user)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Edit User Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              Update user information and role assignments.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Full Name</Label>
+                <Input
+                  id="edit-name"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-email">Email Address</Label>
+                <Input
+                  id="edit-email"
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="edit-active"
+                    checked={editForm.isActive}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, isActive: e.target.checked }))}
+                    className="rounded"
+                  />
+                  <Label htmlFor="edit-active">Active</Label>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Roles</Label>
+                <div className="space-y-2">
+                  {allRoles.map(role => (
+                    <div key={role.id} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`edit-role-${role.id}`}
+                        checked={editForm.roleIds.includes(role.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setEditForm(prev => ({ 
+                              ...prev, 
+                              roleIds: [...prev.roleIds, role.id] 
+                            }))
+                          } else {
+                            setEditForm(prev => ({ 
+                              ...prev, 
+                              roleIds: prev.roleIds.filter(id => id !== role.id) 
+                            }))
+                          }
+                        }}
+                        className="rounded"
+                      />
+                      <Label htmlFor={`edit-role-${role.id}`} className="text-sm">
+                        {role.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditUser} disabled={loading}>
+              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Update User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }

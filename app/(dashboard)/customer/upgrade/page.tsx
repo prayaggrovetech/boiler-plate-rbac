@@ -1,6 +1,5 @@
 "use client"
 
-import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -17,8 +16,7 @@ import {
 
 export default function CustomerUpgrade() {
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-gray-900">Upgrade Your Plan</h1>
@@ -312,6 +310,5 @@ export default function CustomerUpgrade() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
   )
 }

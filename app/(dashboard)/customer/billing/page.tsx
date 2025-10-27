@@ -1,6 +1,5 @@
 "use client"
 
-import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,8 +14,7 @@ import {
 
 export default function CustomerBilling() {
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -213,6 +211,5 @@ export default function CustomerBilling() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   )
 }

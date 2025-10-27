@@ -18,25 +18,54 @@ import Link from "next/link"
 
 export function CustomerDashboard() {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Welcome back!</h1>
-          <p className="text-gray-600 mt-2">
-            Here's what's happening with your account today
-          </p>
+    <div className="space-y-6 w-full min-w-0">
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-2xl p-8 text-white">
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <User className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold">Welcome back!</h1>
+              </div>
+              <p className="text-emerald-100 text-lg mb-4">
+                Here's what's happening with your account today
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-emerald-100">Account Active</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-emerald-200" />
+                  <span className="text-sm text-emerald-100">Premium Plan</span>
+                </div>
+              </div>
+            </div>
+            <div className="hidden lg:flex flex-col items-end gap-4">
+              <Link href="/customer/profile">
+                <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
+                  <User className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </Button>
+              </Link>
+              <div className="text-right">
+                <p className="text-emerald-100 text-sm">Usage This Month</p>
+                <p className="text-2xl font-bold">75%</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <Link href="/customer/profile">
-          <Button>
-            <User className="h-4 w-4 mr-2" />
-            Edit Profile
-          </Button>
-        </Link>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-white/5 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:15px_15px]"></div>
+        </div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4xl:grid-cols-10 gap-3">
         <QuickStat
           title="Account Status"
           value="Active"
@@ -61,7 +90,7 @@ export function CustomerDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4">
         {/* Usage Overview */}
         <Card>
           <CardHeader>
@@ -134,7 +163,7 @@ export function CustomerDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4xl:grid-cols-10 gap-3">
         <QuickActionCard
           title="Manage Profile"
           description="Update your personal information"
@@ -238,23 +267,34 @@ interface QuickStatProps {
 
 function QuickStat({ title, value, subtitle, icon, color }: QuickStatProps) {
   const colorClasses = {
-    green: "border-green-200 bg-green-50",
-    blue: "border-blue-200 bg-blue-50",
-    purple: "border-purple-200 bg-purple-50",
-    orange: "border-orange-200 bg-orange-50"
+    green: "border-green-200 bg-gradient-to-br from-green-50 to-emerald-50",
+    blue: "border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50",
+    purple: "border-purple-200 bg-gradient-to-br from-purple-50 to-violet-50",
+    orange: "border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50"
+  }
+
+  const iconColors = {
+    green: "bg-green-100 text-green-600",
+    blue: "bg-blue-100 text-blue-600", 
+    purple: "bg-purple-100 text-purple-600",
+    orange: "bg-orange-100 text-orange-600"
   }
 
   return (
-    <Card className={colorClasses[color]}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
+    <Card className={`${colorClasses[color]} hover:shadow-lg transition-all duration-200 border`}>
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`p-2 rounded-lg ${iconColors[color]}`}>
+                {icon}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{title}</p>
+                <p className="text-xs text-gray-500">{subtitle}</p>
+              </div>
+            </div>
             <p className="text-2xl font-bold text-gray-900">{value}</p>
-            <p className="text-sm text-gray-600">{subtitle}</p>
-          </div>
-          <div className="p-3 bg-white rounded-lg">
-            {icon}
           </div>
         </div>
       </CardContent>

@@ -8,10 +8,48 @@ import { useHasPermission } from "./hooks/use-permission"
 import { NAVIGATION_ROUTES, type RouteMetadata } from "@/lib/rbac/routes"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import { 
+  LayoutDashboard, 
+  Users, 
+  Shield, 
+  Settings, 
+  User, 
+  CreditCard, 
+  BarChart3, 
+  FileText,
+  Activity,
+  LucideIcon
+} from "lucide-react"
 
 export interface NavigationItem extends RouteMetadata {
   isActive?: boolean
   isVisible?: boolean
+}
+
+// Icon mapping for navigation items
+const iconMap: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  Users,
+  Shield,
+  Settings,
+  User,
+  CreditCard,
+  BarChart3,
+  FileText,
+  Activity
+}
+
+interface IconComponentProps {
+  name: string
+  className?: string
+}
+
+function IconComponent({ name, className }: IconComponentProps) {
+  const Icon = iconMap[name]
+  if (!Icon) {
+    return <LayoutDashboard className={className} />
+  }
+  return <Icon className={className} />
 }
 
 export interface RoleBasedNavigationProps {
@@ -119,10 +157,7 @@ function NavigationItemComponent({
         )}
       >
         {showIcons && item.icon && (
-          <span className="h-4 w-4">
-            {/* Icon would be rendered here - you can use lucide-react icons */}
-            📄
-          </span>
+          <IconComponent name={item.icon} className="h-4 w-4" />
         )}
         {item.title}
       </Link>

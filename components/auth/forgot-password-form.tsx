@@ -33,11 +33,7 @@ export function ForgotPasswordForm() {
   // Redirect authenticated users to their dashboard
   useEffect(() => {
     if (status === "authenticated" && session?.user?.roles) {
-      const roles = session.user.roles.map((role: any) => role.name)
-
-      const redirectPath = "/dashboard"
-
-      router.push(redirectPath)
+      router.push('/dashboard')
     }
   }, [status, session, router])
 

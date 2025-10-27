@@ -29,6 +29,26 @@ export const ROUTE_PERMISSIONS: RoutePermission[] = [
     requireAll: false
   },
   {
+    path: '/admin/analytics',
+    permissions: ['view:analytics'],
+    requireAll: false
+  },
+  {
+    path: '/admin/audit-logs',
+    permissions: ['view:audit'],
+    requireAll: false
+  },
+  {
+    path: '/admin/system-health',
+    permissions: ['view:system'],
+    requireAll: false
+  },
+  {
+    path: '/admin/billing',
+    permissions: ['view:billing'],
+    requireAll: false
+  },
+  {
     path: '/admin/settings',
     permissions: ['view:settings', 'manage:settings'],
     requireAll: false
@@ -186,6 +206,7 @@ export function isAuthRoute(pathname: string): boolean {
  * Get dashboard redirect path based on user roles
  */
 export function getDashboardRedirect(userRoles: string[]): string {
+  // All users go to the unified dashboard which adapts based on their role
   return '/dashboard'
 }
 
@@ -230,6 +251,7 @@ export interface RouteMetadata {
 }
 
 export const NAVIGATION_ROUTES: RouteMetadata[] = [
+  // Universal dashboard - shows role-appropriate content
   {
     path: '/dashboard',
     title: 'Dashboard',
@@ -237,9 +259,11 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     permissions: [],
     roles: ['admin', 'manager', 'customer']
   },
+
+  // Admin routes
   {
     path: '/admin/users',
-    title: 'Users',
+    title: 'User Management',
     icon: 'Users',
     permissions: ['view:users'],
     roles: ['admin', 'manager']
@@ -252,13 +276,42 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     roles: ['admin']
   },
   {
+    path: '/admin/analytics',
+    title: 'Analytics',
+    icon: 'BarChart3',
+    permissions: ['view:analytics'],
+    roles: ['admin']
+  },
+  {
+    path: '/admin/audit-logs',
+    title: 'Audit Logs',
+    icon: 'FileText',
+    permissions: ['view:audit'],
+    roles: ['admin']
+  },
+  {
+    path: '/admin/system-health',
+    title: 'System Health',
+    icon: 'Activity',
+    permissions: ['view:system'],
+    roles: ['admin']
+  },
+  {
+    path: '/admin/billing',
+    title: 'Billing Overview',
+    icon: 'CreditCard',
+    permissions: ['view:billing'],
+    roles: ['admin']
+  },
+  {
     path: '/admin/settings',
-    title: 'Settings',
+    title: 'System Settings',
     icon: 'Settings',
     permissions: ['view:settings'],
     roles: ['admin']
   },
 
+  // Manager routes
   {
     path: '/manager/team',
     title: 'Team Management',
@@ -274,6 +327,7 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     roles: ['manager']
   },
 
+  // Customer routes
   {
     path: '/customer/profile',
     title: 'Profile',

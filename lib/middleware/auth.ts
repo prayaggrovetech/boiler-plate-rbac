@@ -52,9 +52,8 @@ export function createUnauthorizedRedirect(request: NextRequest): NextResponse {
  * Create dashboard redirect based on user roles
  */
 export function createDashboardRedirect(request: NextRequest, roles: string[]): NextResponse {
-  let dashboardPath = '/unauthorized'
-  
-  dashboardPath = '/dashboard'
+  // All authenticated users go to the unified dashboard
+  const dashboardPath = '/dashboard'
   
   return NextResponse.redirect(new URL(dashboardPath, request.url))
 }

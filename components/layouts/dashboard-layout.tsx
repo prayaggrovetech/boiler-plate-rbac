@@ -37,7 +37,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex w-full overflow-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -48,19 +48,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed inset-y-0 left-0 z-50 w-48 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <DashboardSidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="flex-1 w-full min-w-0">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="py-4">
+          <div className="w-full px-4">
             <DashboardBreadcrumbs />
-            {children}
+            <div className="w-full">
+              {children}
+            </div>
           </div>
         </main>
       </div>
@@ -166,7 +168,7 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
   return (
     <header className="bg-white shadow-sm border-b">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Mobile menu button */}
           <button
