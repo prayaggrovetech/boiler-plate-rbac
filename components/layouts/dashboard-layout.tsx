@@ -16,13 +16,13 @@ import {
   ModalTrigger,
 } from "@/components/ui/modal"
 import { RoleBasedNavigation } from "@/components/rbac/role-based-navigation"
-import { 
-  Menu, 
-  X, 
-  Home, 
-  User, 
-  Settings, 
-  LogOut, 
+import {
+  Menu,
+  X,
+  Home,
+  User,
+  Settings,
+  LogOut,
   Bell,
   Search,
   ChevronRight
@@ -37,10 +37,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -126,7 +126,7 @@ function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-4">
-        <RoleBasedNavigation 
+        <RoleBasedNavigation
           className="px-4"
           itemClassName="mb-1"
           showIcons={true}
@@ -142,9 +142,9 @@ function DashboardSidebar({ onClose }: DashboardSidebarProps) {
               Settings
             </Link>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
             onClick={() => signOut({ callbackUrl: "/" })}
           >
@@ -207,7 +207,7 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
 function DashboardBreadcrumbs() {
   const pathname = usePathname()
-  
+
   // Generate breadcrumbs from pathname
   const pathSegments = pathname.split('/').filter(Boolean)
   const breadcrumbs = pathSegments.map((segment, index) => {
@@ -232,7 +232,7 @@ function DashboardBreadcrumbs() {
             {breadcrumb.isLast ? (
               <span className="text-gray-900 font-medium">{breadcrumb.label}</span>
             ) : (
-              <Link 
+              <Link
                 href={breadcrumb.href}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -266,12 +266,12 @@ function UserMenu({ user }: UserMenuProps) {
           </span>
         </button>
       </ModalTrigger>
-      
+
       <ModalContent className="sm:max-w-md">
         <ModalHeader>
           <ModalTitle>Account Menu</ModalTitle>
         </ModalHeader>
-        
+
         <div className="space-y-4">
           {/* User Info */}
           <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
@@ -306,19 +306,19 @@ function UserMenu({ user }: UserMenuProps) {
                 View Profile
               </Link>
             </Button>
-            
+
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
               <Link href="/settings">
                 <Settings className="h-4 w-4 mr-2" />
                 Account Settings
               </Link>
             </Button>
-            
+
             <Separator />
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
+
+            <Button
+              variant="ghost"
+              size="sm"
               className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={() => signOut({ callbackUrl: "/" })}
             >

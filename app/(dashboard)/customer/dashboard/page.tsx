@@ -1,3 +1,5 @@
+"use client"
+
 import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -7,9 +9,7 @@ import {
   User, 
   CreditCard, 
   BarChart3, 
-  Settings,
   Calendar,
-  FileText,
   Download,
   Star,
   TrendingUp,
@@ -213,11 +213,15 @@ export default function CustomerDashboard() {
             </div>
             
             <div className="mt-6 flex gap-3">
-              <Button variant="outline" asChild>
-                <Link href="/customer/billing">Manage Billing</Link>
+              <Button asChild variant="outline">
+                <Link href="/customer/billing">
+                  Manage Billing
+                </Link>
               </Button>
               <Button asChild>
-                <Link href="/customer/upgrade">Upgrade Plan</Link>
+                <Link href="/customer/upgrade">
+                  Upgrade Plan
+                </Link>
               </Button>
             </div>
           </CardContent>
@@ -292,13 +296,6 @@ interface ActivityItemProps {
 }
 
 function ActivityItem({ title, description, time, type }: ActivityItemProps) {
-  const typeColors = {
-    profile: "bg-blue-100 text-blue-800",
-    api: "bg-green-100 text-green-800",
-    billing: "bg-purple-100 text-purple-800",
-    team: "bg-orange-100 text-orange-800"
-  }
-
   return (
     <div className="flex items-start gap-3">
       <div className={`w-2 h-2 rounded-full mt-2 ${

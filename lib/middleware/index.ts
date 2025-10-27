@@ -7,9 +7,12 @@ import {
   createDashboardRedirect,
   createApiErrorResponse 
 } from './auth'
+import { applySecurityHeaders } from '@/lib/security/headers'
+import { apiRateLimit, authRateLimit, createRateLimitHeaders } from '@/lib/security/rate-limit'
 import { 
   hasRoutePermissions, 
   canAccessAdminRoutes, 
+  canAccessManagerRoutes,
   canAccessCustomerRoutes,
   hasApiPermissions,
   getUserRolesFromToken,
@@ -35,9 +38,17 @@ export async function handleMiddleware(request: NextRequest): Promise<NextRespon
   MiddlewarePerformanceMonitor.start(requestId)
   
   try {
-    // Basic rate limiting check
-    const identifier = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
-    if (!RateLimitMonitor.checkRateLimit(identifier)) {
+    // Apply rate limiting
+    let rateLimitResult
+    if (pathname.startsWith('/api/auth/') || pathname === '/login' || pathname === '/signup') {
+      // Stricter rate limiting for auth endpoints
+      rateLimitResult = authRateLimit.isAllowed(request)
+    } else if (pathname.startsWith('/api/')) {
+      // General API rate limiting
+      rateLimitResult = apiRateLimit.isAllowed(request)
+    }
+
+    if (rateLimitResult && !rateLimitResult.allowed) {
       logSecurityEvent(request, {
         type: 'suspicious_activity',
         pathname,
@@ -45,10 +56,17 @@ export async function handleMiddleware(request: NextRequest): Promise<NextRespon
         details: { reason: 'rate_limit_exceeded' }
       })
       
-      if (pathname.startsWith('/api/')) {
-        return createApiErrorResponse('Rate limit exceeded', 429)
-      }
-      return createUnauthorizedRedirect(request)
+      const response = pathname.startsWith('/api/') 
+        ? createApiErrorResponse('Rate limit exceeded', 429)
+        : createUnauthorizedRedirect(request)
+      
+      // Add rate limit headers
+      const headers = createRateLimitHeaders(rateLimitResult)
+      Object.entries(headers).forEach(([key, value]) => {
+        response.headers.set(key, value)
+      })
+      
+      return response
     }
     // Skip middleware for static files and certain API routes
     if (shouldSkipMiddleware(pathname)) {
@@ -76,14 +94,11 @@ export async function handleMiddleware(request: NextRequest): Promise<NextRespon
       return handleApiRoute(request, pathname, userRoles)
     }
 
-    // Handle dashboard routes
-    if (pathname.startsWith('/admin/') || pathname.startsWith('/customer/')) {
-      return handleDashboardRoute(request, pathname, userRoles, roleNames)
-    }
+    // Let the dashboard page handle its own redirect to avoid conflicts
 
-    // Handle root dashboard redirect
-    if (pathname === '/dashboard') {
-      return createDashboardRedirect(request, roleNames)
+    // Handle dashboard routes
+    if (pathname.startsWith('/admin/') || pathname.startsWith('/manager/') || pathname.startsWith('/customer/')) {
+      return handleDashboardRoute(request, pathname, userRoles, roleNames)
     }
 
     // Check specific route permissions
@@ -103,7 +118,10 @@ export async function handleMiddleware(request: NextRequest): Promise<NextRespon
     })
     
     logAccessAttempt(pathname, roleNames, true)
-    return NextResponse.next()
+    
+    // Apply security headers to the response
+    const response = NextResponse.next()
+    return applySecurityHeaders(response)
 
   } catch (error) {
     console.error('Middleware error:', error)
@@ -187,6 +205,14 @@ function handleDashboardRoute(
   // Check admin routes
   if (pathname.startsWith('/admin/')) {
     if (!canAccessAdminRoutes(userRoles)) {
+      logAccessAttempt(pathname, roleNames, false)
+      return createUnauthorizedRedirect(request)
+    }
+  }
+  
+  // Check manager routes
+  if (pathname.startsWith('/manager/')) {
+    if (!canAccessManagerRoutes(userRoles)) {
       logAccessAttempt(pathname, roleNames, false)
       return createUnauthorizedRedirect(request)
     }

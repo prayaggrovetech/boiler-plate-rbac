@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -35,6 +35,7 @@ type SignupForm = z.infer<typeof signupSchema>
 export function SignupForm() {
   const router = useRouter()
   const { toast } = useToast()
+  const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -46,6 +47,24 @@ export function SignupForm() {
     acceptTerms: false,
   })
   const [errors, setErrors] = useState<Partial<SignupForm>>({})
+
+  // Redirect authenticated users to their dashboard
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.roles) {
+      const roles = session.user.roles.map((role: any) => role.name)
+      
+      let redirectPath = "/dashboard"
+      if (roles.includes('admin')) {
+        redirectPath = "/admin/dashboard"
+      } else if (roles.includes('manager')) {
+        redirectPath = "/manager/dashboard"
+      } else if (roles.includes('customer')) {
+        redirectPath = "/customer/dashboard"
+      }
+      
+      router.push(redirectPath)
+    }
+  }, [status, session, router])
 
   const handleInputChange = (field: keyof SignupForm, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -104,7 +123,6 @@ export function SignupForm() {
       }
 
       toast({
-        variant: "success",
         title: "Account Created!",
         description: "Your account has been created successfully. Signing you in...",
       })
@@ -145,6 +163,30 @@ export function SignupForm() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Show loading while checking authentication status
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render the form if user is authenticated (will redirect)
+  if (status === "authenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    )
   }
 
   const handleGoogleSignIn = async () => {

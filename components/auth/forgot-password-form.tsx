@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,12 +21,56 @@ type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>
 
 export function ForgotPasswordForm() {
   const { toast } = useToast()
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [formData, setFormData] = useState<ForgotPasswordForm>({
     email: "",
   })
   const [errors, setErrors] = useState<Partial<ForgotPasswordForm>>({})
+
+  // Redirect authenticated users to their dashboard
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.roles) {
+      const roles = session.user.roles.map((role: any) => role.name)
+
+      let redirectPath = "/dashboard"
+      if (roles.includes('admin')) {
+        redirectPath = "/admin/dashboard"
+      } else if (roles.includes('manager')) {
+        redirectPath = "/manager/dashboard"
+      } else if (roles.includes('customer')) {
+        redirectPath = "/customer/dashboard"
+      }
+
+      router.push(redirectPath)
+    }
+  }, [status, session, router])
+
+  // Show loading while checking authentication status
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render the form if user is authenticated (will redirect)
+  if (status === "authenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    )
+  }
 
   const handleInputChange = (field: keyof ForgotPasswordForm, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -49,7 +95,6 @@ export function ForgotPasswordForm() {
 
       setIsSubmitted(true)
       toast({
-        variant: "success",
         title: "Reset Email Sent",
         description: "Check your email for password reset instructions.",
       })

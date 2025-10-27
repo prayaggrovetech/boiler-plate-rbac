@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Label } from "./label"
 import { cn } from "@/lib/utils"

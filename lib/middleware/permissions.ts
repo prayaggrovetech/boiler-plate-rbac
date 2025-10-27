@@ -30,6 +30,13 @@ export function canAccessAdminRoutes(userRoles: any[]): boolean {
 }
 
 /**
+ * Check manager route access
+ */
+export function canAccessManagerRoutes(userRoles: any[]): boolean {
+  return PermissionChecker.hasAnyRole(userRoles, ['admin', 'manager'])
+}
+
+/**
  * Check customer route access
  */
 export function canAccessCustomerRoutes(userRoles: any[]): boolean {

@@ -54,8 +54,10 @@ export function createUnauthorizedRedirect(request: NextRequest): NextResponse {
 export function createDashboardRedirect(request: NextRequest, roles: string[]): NextResponse {
   let dashboardPath = '/unauthorized'
   
-  if (roles.includes('admin') || roles.includes('manager')) {
+  if (roles.includes('admin')) {
     dashboardPath = '/admin/dashboard'
+  } else if (roles.includes('manager')) {
+    dashboardPath = '/manager/dashboard'
   } else if (roles.includes('customer')) {
     dashboardPath = '/customer/dashboard'
   }

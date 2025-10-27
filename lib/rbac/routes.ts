@@ -27,6 +27,28 @@ export const ROUTE_PERMISSIONS: RoutePermission[] = [
     requireAll: false
   },
 
+  // Manager routes - require manager role
+  {
+    path: '/manager/dashboard',
+    permissions: ['view:analytics', 'view:users'],
+    requireAll: false
+  },
+  {
+    path: '/manager/team',
+    permissions: ['view:users', 'manage:users'],
+    requireAll: false
+  },
+  {
+    path: '/manager/projects',
+    permissions: ['view:analytics'],
+    requireAll: false
+  },
+  {
+    path: '/manager/reviews',
+    permissions: ['view:users'],
+    requireAll: false
+  },
+
   // Customer routes - require customer role
   {
     path: '/customer/dashboard',
@@ -39,7 +61,22 @@ export const ROUTE_PERMISSIONS: RoutePermission[] = [
     requireAll: false
   },
   {
-    path: '/customer/subscription',
+    path: '/customer/billing',
+    permissions: ['view:subscription'],
+    requireAll: false
+  },
+  {
+    path: '/customer/analytics',
+    permissions: ['view:profile'],
+    requireAll: false
+  },
+  {
+    path: '/customer/reports',
+    permissions: ['view:profile'],
+    requireAll: false
+  },
+  {
+    path: '/customer/upgrade',
     permissions: ['view:subscription'],
     requireAll: false
   },
@@ -142,8 +179,12 @@ export function isAuthRoute(pathname: string): boolean {
  * Get dashboard redirect path based on user roles
  */
 export function getDashboardRedirect(userRoles: string[]): string {
-  if (userRoles.includes('admin') || userRoles.includes('manager')) {
+  if (userRoles.includes('admin')) {
     return '/admin/dashboard'
+  }
+  
+  if (userRoles.includes('manager')) {
+    return '/manager/dashboard'
   }
   
   if (userRoles.includes('customer')) {
@@ -164,6 +205,11 @@ export function canAccessRoute(pathname: string, userRoles: string[]): boolean {
 
   // Admin routes
   if (pathname.startsWith('/admin')) {
+    return userRoles.includes('admin') || userRoles.includes('manager')
+  }
+
+  // Manager routes
+  if (pathname.startsWith('/manager')) {
     return userRoles.includes('admin') || userRoles.includes('manager')
   }
 
@@ -218,6 +264,27 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     roles: ['admin']
   },
   {
+    path: '/manager/dashboard',
+    title: 'Manager Dashboard',
+    icon: 'LayoutDashboard',
+    permissions: ['view:analytics'],
+    roles: ['manager']
+  },
+  {
+    path: '/manager/team',
+    title: 'Team Management',
+    icon: 'Users',
+    permissions: ['view:users'],
+    roles: ['manager']
+  },
+  {
+    path: '/manager/projects',
+    title: 'Projects',
+    icon: 'BarChart3',
+    permissions: ['view:analytics'],
+    roles: ['manager']
+  },
+  {
     path: '/customer/dashboard',
     title: 'Dashboard',
     icon: 'LayoutDashboard',
@@ -232,10 +299,24 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     roles: ['customer']
   },
   {
-    path: '/customer/subscription',
-    title: 'Subscription',
+    path: '/customer/billing',
+    title: 'Billing',
     icon: 'CreditCard',
     permissions: ['view:subscription'],
+    roles: ['customer']
+  },
+  {
+    path: '/customer/analytics',
+    title: 'Analytics',
+    icon: 'BarChart3',
+    permissions: ['view:profile'],
+    roles: ['customer']
+  },
+  {
+    path: '/customer/reports',
+    title: 'Reports',
+    icon: 'FileText',
+    permissions: ['view:profile'],
     roles: ['customer']
   }
 ]
