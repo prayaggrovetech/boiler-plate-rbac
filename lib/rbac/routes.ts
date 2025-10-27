@@ -5,6 +5,13 @@ import { RoutePermission } from './types'
  * Maps routes to required permissions for middleware protection
  */
 export const ROUTE_PERMISSIONS: RoutePermission[] = [
+  // Centralized dashboard - accessible by all authenticated users
+  {
+    path: '/dashboard',
+    permissions: [],
+    requireAll: false
+  },
+  
   // Admin routes - require admin or manager role
   {
     path: '/admin/dashboard',
@@ -179,19 +186,7 @@ export function isAuthRoute(pathname: string): boolean {
  * Get dashboard redirect path based on user roles
  */
 export function getDashboardRedirect(userRoles: string[]): string {
-  if (userRoles.includes('admin')) {
-    return '/admin/dashboard'
-  }
-  
-  if (userRoles.includes('manager')) {
-    return '/manager/dashboard'
-  }
-  
-  if (userRoles.includes('customer')) {
-    return '/customer/dashboard'
-  }
-  
-  return '/unauthorized'
+  return '/dashboard'
 }
 
 /**
@@ -236,11 +231,11 @@ export interface RouteMetadata {
 
 export const NAVIGATION_ROUTES: RouteMetadata[] = [
   {
-    path: '/admin/dashboard',
+    path: '/dashboard',
     title: 'Dashboard',
     icon: 'LayoutDashboard',
-    permissions: ['view:analytics'],
-    roles: ['admin', 'manager']
+    permissions: [],
+    roles: ['admin', 'manager', 'customer']
   },
   {
     path: '/admin/users',
@@ -263,13 +258,7 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     permissions: ['view:settings'],
     roles: ['admin']
   },
-  {
-    path: '/manager/dashboard',
-    title: 'Manager Dashboard',
-    icon: 'LayoutDashboard',
-    permissions: ['view:analytics'],
-    roles: ['manager']
-  },
+
   {
     path: '/manager/team',
     title: 'Team Management',
@@ -284,13 +273,7 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     permissions: ['view:analytics'],
     roles: ['manager']
   },
-  {
-    path: '/customer/dashboard',
-    title: 'Dashboard',
-    icon: 'LayoutDashboard',
-    permissions: ['view:profile'],
-    roles: ['customer']
-  },
+
   {
     path: '/customer/profile',
     title: 'Profile',

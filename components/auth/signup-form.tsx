@@ -53,14 +53,7 @@ export function SignupForm() {
     if (status === "authenticated" && session?.user?.roles) {
       const roles = session.user.roles.map((role: any) => role.name)
       
-      let redirectPath = "/dashboard"
-      if (roles.includes('admin')) {
-        redirectPath = "/admin/dashboard"
-      } else if (roles.includes('manager')) {
-        redirectPath = "/manager/dashboard"
-      } else if (roles.includes('customer')) {
-        redirectPath = "/customer/dashboard"
-      }
+      const redirectPath = "/dashboard"
       
       router.push(redirectPath)
     }
@@ -135,7 +128,7 @@ export function SignupForm() {
       })
 
       if (signInResult?.ok) {
-        router.push("/customer/dashboard")
+        router.push("/dashboard")
       } else {
         toast({
           variant: "default",
@@ -192,7 +185,7 @@ export function SignupForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/customer/dashboard" })
+      await signIn("google", { callbackUrl: "/dashboard" })
     } catch (error) {
       toast({
         variant: "destructive",

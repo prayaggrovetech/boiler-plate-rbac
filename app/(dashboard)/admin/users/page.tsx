@@ -67,7 +67,7 @@ export default function UsersManagement() {
   const [roles, setRoles] = useState<Role[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedRole, setSelectedRole] = useState<string>("")
+  const [selectedRole, setSelectedRole] = useState<string>("all")
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -86,7 +86,7 @@ export default function UsersManagement() {
         page: page.toString(),
         limit: "10",
         ...(searchTerm && { search: searchTerm }),
-        ...(selectedRole && { role: selectedRole })
+        ...(selectedRole && selectedRole !== "all" && { role: selectedRole })
       })
 
       const response = await fetch(`/api/users?${params}`)
@@ -194,7 +194,7 @@ export default function UsersManagement() {
                   <SelectValue placeholder="Filter by role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All roles</SelectItem>
+                  <SelectItem value="all">All roles</SelectItem>
                   {roles.map((role) => (
                     <SelectItem key={role.id} value={role.name}>
                       {role.name}

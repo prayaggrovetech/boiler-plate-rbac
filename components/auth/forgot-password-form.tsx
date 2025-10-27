@@ -35,14 +35,7 @@ export function ForgotPasswordForm() {
     if (status === "authenticated" && session?.user?.roles) {
       const roles = session.user.roles.map((role: any) => role.name)
 
-      let redirectPath = "/dashboard"
-      if (roles.includes('admin')) {
-        redirectPath = "/admin/dashboard"
-      } else if (roles.includes('manager')) {
-        redirectPath = "/manager/dashboard"
-      } else if (roles.includes('customer')) {
-        redirectPath = "/customer/dashboard"
-      }
+      const redirectPath = "/dashboard"
 
       router.push(redirectPath)
     }

@@ -42,14 +42,7 @@ export function LoginForm() {
     if (status === "authenticated" && session?.user?.roles) {
       const roles = session.user.roles.map((role: any) => role.name)
       
-      let redirectPath = "/dashboard"
-      if (roles.includes('admin')) {
-        redirectPath = "/admin/dashboard"
-      } else if (roles.includes('manager')) {
-        redirectPath = "/manager/dashboard"
-      } else if (roles.includes('customer')) {
-        redirectPath = "/customer/dashboard"
-      }
+      const redirectPath = "/dashboard"
       
       // Use the callback URL if it's not a login/signup page
       const finalRedirect = callbackUrl && !callbackUrl.includes('/login') && !callbackUrl.includes('/signup') 
@@ -99,14 +92,7 @@ export function LoginForm() {
         // Get fresh session to determine redirect
         const session = await getSession()
         if (session?.user?.roles) {
-          const roles = session.user.roles.map((role: any) => role.name)
-          if (roles.includes('admin') || roles.includes('manager')) {
-            router.push('/admin/dashboard')
-          } else if (roles.includes('customer')) {
-            router.push('/customer/dashboard')
-          } else {
-            router.push(callbackUrl)
-          }
+          router.push('/dashboard')
         } else {
           router.push(callbackUrl)
         }

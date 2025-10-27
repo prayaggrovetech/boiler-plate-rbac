@@ -97,7 +97,7 @@ export async function handleMiddleware(request: NextRequest): Promise<NextRespon
     // Let the dashboard page handle its own redirect to avoid conflicts
 
     // Handle dashboard routes
-    if (pathname.startsWith('/admin/') || pathname.startsWith('/manager/') || pathname.startsWith('/customer/')) {
+    if (pathname === '/dashboard' || pathname.startsWith('/admin/') || pathname.startsWith('/manager/') || pathname.startsWith('/customer/')) {
       return handleDashboardRoute(request, pathname, userRoles, roleNames)
     }
 
@@ -202,6 +202,16 @@ function handleDashboardRoute(
   userRoles: any[], 
   roleNames: string[]
 ): NextResponse {
+  // Handle centralized dashboard - allow access if user has any valid role
+  if (pathname === '/dashboard') {
+    if (roleNames.length === 0) {
+      logAccessAttempt(pathname, roleNames, false)
+      return createUnauthorizedRedirect(request)
+    }
+    logAccessAttempt(pathname, roleNames, true)
+    return NextResponse.next()
+  }
+  
   // Check admin routes
   if (pathname.startsWith('/admin/')) {
     if (!canAccessAdminRoutes(userRoles)) {

@@ -185,15 +185,6 @@ export const PermissionUtils = {
    * Get dashboard path based on user roles
    */
   getDashboardPath: (userRoles: Role[]): string => {
-    if (PermissionChecker.hasRole(userRoles, 'admin')) {
-      return '/admin/dashboard'
-    }
-    if (PermissionChecker.hasRole(userRoles, 'manager')) {
-      return '/manager/dashboard'
-    }
-    if (PermissionChecker.hasRole(userRoles, 'customer')) {
-      return '/customer/dashboard'
-    }
-    return '/unauthorized'
+    return '/dashboard'
   }
 }

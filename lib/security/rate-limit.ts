@@ -93,7 +93,7 @@ class RateLimiter {
 // Pre-configured rate limiters
 export const authRateLimit = new RateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  maxRequests: 5, // 5 attempts per 15 minutes
+  maxRequests: 50, // 50 attempts per 15 minutes (increased for development)
   keyGenerator: (request) => {
     const email = request.headers.get('x-user-email') || 'unknown'
     return `auth_rate_limit:${email}`
