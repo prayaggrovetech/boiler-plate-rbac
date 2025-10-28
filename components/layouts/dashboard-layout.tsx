@@ -387,23 +387,61 @@ function DashboardBreadcrumbs() {
 
   // Generate breadcrumbs from pathname
   const pathSegments = pathname.split('/').filter(Boolean)
-  const breadcrumbs = pathSegments.map((segment, index) => {
-    const href = '/' + pathSegments.slice(0, index + 1).join('/')
-    const label = segment.charAt(0).toUpperCase() + segment.slice(1)
-    return { href, label, isLast: index === pathSegments.length - 1 }
+  
+  // Skip role-based prefixes (admin, customer, manager) and dashboard
+  const rolePrefixes = ['admin', 'customer', 'manager']
+  const filteredSegments = pathSegments.filter(segment => 
+    !rolePrefixes.includes(segment.toLowerCase()) && segment.toLowerCase() !== 'dashboard'
+  )
+
+  // If we're on a role dashboard (e.g., /admin/dashboard), show just "Dashboard"
+  if (pathSegments.includes('dashboard') && filteredSegments.length === 0) {
+    return (
+      <nav className="flex mb-6" aria-label="Breadcrumb">
+        <ol className="flex items-center space-x-2">
+          <li>
+            <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+              <Home className="h-4 w-4" />
+            </Link>
+          </li>
+          <li className="flex items-center">
+            <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
+            <span className="text-foreground font-medium">Dashboard</span>
+          </li>
+        </ol>
+      </nav>
+    )
+  }
+
+  // Build breadcrumbs from filtered segments
+  const breadcrumbs = filteredSegments.map((segment, index) => {
+    // Reconstruct the full path including the role prefix
+    const fullPath = '/' + pathSegments.slice(0, pathSegments.indexOf(segment) + 1).join('/')
+    
+    // Format label: replace hyphens with spaces and capitalize
+    const label = segment
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+    
+    return { 
+      href: fullPath, 
+      label, 
+      isLast: index === filteredSegments.length - 1 
+    }
   })
 
-  if (breadcrumbs.length <= 1) return null
+  if (breadcrumbs.length === 0) return null
 
   return (
     <nav className="flex mb-6" aria-label="Breadcrumb">
       <ol className="flex items-center space-x-2">
         <li>
-          <Link href="/" className="text-muted-foreground hover:text-foreground">
+          <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
             <Home className="h-4 w-4" />
           </Link>
         </li>
-        {breadcrumbs.map((breadcrumb, index) => (
+        {breadcrumbs.map((breadcrumb) => (
           <li key={breadcrumb.href} className="flex items-center">
             <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
             {breadcrumb.isLast ? (
