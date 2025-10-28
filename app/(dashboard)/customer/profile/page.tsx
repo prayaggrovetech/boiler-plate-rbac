@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { useToast } from "@/components/ui/use-toast"
 import { 
   User, 
   Mail, 
@@ -22,8 +23,10 @@ import {
 import { useSession } from "next-auth/react"
 
 export default function CustomerProfile() {
-  const { data: session } = useSession()
+  const { data: session, update: updateSession } = useSession()
+  const { toast } = useToast()
   const [isEditing, setIsEditing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
@@ -32,11 +35,65 @@ export default function CustomerProfile() {
     bio: ""
   })
 
-  const handleSave = () => {
-    // Here you would typically save to the API
-    console.log("Saving profile data:", formData)
-    setIsEditing(false)
-    // Add toast notification here
+  // Update form data when session changes
+  useEffect(() => {
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
+        name: session.user.name || "",
+        email: session.user.email || "",
+      }))
+    }
+  }, [session])
+
+  const handleSave = async () => {
+    setIsLoading(true)
+    
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          location: formData.location,
+          bio: formData.bio,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update profile")
+      }
+
+      // Update the session with new user data
+      await updateSession({
+        ...session,
+        user: {
+          ...session?.user,
+          name: data.user.name,
+        }
+      })
+
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
+      })
+      
+      setIsEditing(false)
+    } catch (error) {
+      console.error("Profile update error:", error)
+      toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: error instanceof Error ? error.message : "Failed to update profile. Please try again.",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleCancel = () => {
@@ -55,18 +112,18 @@ export default function CustomerProfile() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
+            <p className="text-muted-foreground mt-2">
               Manage your account information and preferences
             </p>
           </div>
           <div className="flex gap-3">
             {isEditing ? (
               <>
-                <Button variant="outline" onClick={handleCancel}>
+                <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
                   Cancel
                 </Button>
-                <Button onClick={handleSave}>
+                <Button onClick={handleSave} disabled={isLoading} loading={isLoading}>
                   <Save className="h-4 w-4 mr-2" />
                   Save Changes
                 </Button>
@@ -165,23 +222,23 @@ export default function CustomerProfile() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <Key className="h-5 w-5 text-gray-500" />
+                    <Key className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">Password</p>
-                      <p className="text-sm text-gray-500">Last changed 3 months ago</p>
+                      <p className="font-medium text-foreground">Password</p>
+                      <p className="text-sm text-muted-foreground">Last changed 3 months ago</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Change Password
+                  <Button variant="outline" size="sm" asChild>
+                    <a href="/settings">Change Password</a>
                   </Button>
                 </div>
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <Shield className="h-5 w-5 text-gray-500" />
+                    <Shield className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">Two-Factor Authentication</p>
-                      <p className="text-sm text-gray-500">Add an extra layer of security</p>
+                      <p className="font-medium text-foreground">Two-Factor Authentication</p>
+                      <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
                     </div>
                   </div>
                   <Button variant="outline" size="sm">
@@ -206,24 +263,24 @@ export default function CustomerProfile() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Email Notifications</p>
-                      <p className="text-sm text-gray-500">Receive updates via email</p>
+                      <p className="font-medium text-foreground">Email Notifications</p>
+                      <p className="text-sm text-muted-foreground">Receive updates via email</p>
                     </div>
                     <input type="checkbox" className="rounded" defaultChecked />
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Marketing Emails</p>
-                      <p className="text-sm text-gray-500">Receive promotional content</p>
+                      <p className="font-medium text-foreground">Marketing Emails</p>
+                      <p className="text-sm text-muted-foreground">Receive promotional content</p>
                     </div>
                     <input type="checkbox" className="rounded" />
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Security Alerts</p>
-                      <p className="text-sm text-gray-500">Important security notifications</p>
+                      <p className="font-medium text-foreground">Security Alerts</p>
+                      <p className="text-sm text-muted-foreground">Important security notifications</p>
                     </div>
                     <input type="checkbox" className="rounded" defaultChecked />
                   </div>
@@ -242,8 +299,8 @@ export default function CustomerProfile() {
                     <User className="h-12 w-12 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">{session?.user?.name || "User"}</h3>
-                    <p className="text-gray-500">{session?.user?.email}</p>
+                    <h3 className="font-semibold text-lg text-foreground">{session?.user?.name || "User"}</h3>
+                    <p className="text-muted-foreground">{session?.user?.email}</p>
                   </div>
                   <div className="flex justify-center">
                     <Badge variant="secondary">Customer</Badge>
@@ -260,24 +317,24 @@ export default function CustomerProfile() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">Member since</span>
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-foreground">Member since</span>
                   </div>
-                  <span className="text-sm font-medium">Jan 2024</span>
+                  <span className="text-sm font-medium text-foreground">Jan 2024</span>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">Email verified</span>
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-foreground">Email verified</span>
                   </div>
                   <Badge variant="success" className="text-xs">Verified</Badge>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">Account status</span>
+                    <Shield className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-foreground">Account status</span>
                   </div>
                   <Badge variant="success" className="text-xs">Active</Badge>
                 </div>

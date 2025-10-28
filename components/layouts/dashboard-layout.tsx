@@ -71,8 +71,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         sidebarCollapsed ? "lg:w-16" : "lg:w-64",
         "w-64" // Mobile width
       )}>
-        <DashboardSidebar 
-          onClose={() => setSidebarOpen(false)} 
+        <DashboardSidebar
+          onClose={() => setSidebarOpen(false)}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
@@ -80,7 +80,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main content */}
       <div className="flex-1 w-full min-w-0">
-        <DashboardHeader 
+        <DashboardHeader
           onMenuClick={() => setSidebarOpen(true)}
           sidebarCollapsed={sidebarCollapsed}
         />
@@ -229,10 +229,10 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="w-full justify-center p-2" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-center p-2"
                     asChild
                   >
                     <Link href="/settings">
@@ -386,10 +386,10 @@ function DashboardBreadcrumbs() {
 
   // Generate breadcrumbs from pathname
   const pathSegments = pathname.split('/').filter(Boolean)
-  
+
   // Skip role-based prefixes (admin, customer, manager) and dashboard
   const rolePrefixes = ['admin', 'customer', 'manager']
-  const filteredSegments = pathSegments.filter(segment => 
+  const filteredSegments = pathSegments.filter(segment =>
     !rolePrefixes.includes(segment.toLowerCase()) && segment.toLowerCase() !== 'dashboard'
   )
 
@@ -416,17 +416,17 @@ function DashboardBreadcrumbs() {
   const breadcrumbs = filteredSegments.map((segment, index) => {
     // Reconstruct the full path including the role prefix
     const fullPath = '/' + pathSegments.slice(0, pathSegments.indexOf(segment) + 1).join('/')
-    
+
     // Format label: replace hyphens with spaces and capitalize
     const label = segment
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
-    
-    return { 
-      href: fullPath, 
-      label, 
-      isLast: index === filteredSegments.length - 1 
+
+    return {
+      href: fullPath,
+      label,
+      isLast: index === filteredSegments.length - 1
     }
   })
 
@@ -468,9 +468,9 @@ function UserMenu({ user }: UserMenuProps) {
   // Determine the role prefix for navigation
   const getRolePrefix = () => {
     if (!user.roles || user.roles.length === 0) return 'customer'
-    
+
     const roleNames = user.roles.map((role: any) => role.name.toLowerCase())
-    
+
     // Priority: admin > manager > customer
     if (roleNames.includes('admin')) return 'admin'
     if (roleNames.includes('manager')) return 'manager'
