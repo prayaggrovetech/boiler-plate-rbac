@@ -28,8 +28,8 @@ export default function AdminSettingsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">System Settings</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">System Settings</h1>
+          <p className="text-muted-foreground mt-2">
             Configure system-wide settings and administrative preferences.
           </p>
         </div>
@@ -168,13 +168,13 @@ export default function AdminSettingsPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-card">
               <div>
-                <h4 className="font-medium">Two-Factor Authentication</h4>
-                <p className="text-sm text-gray-500">Require 2FA for admin accounts</p>
+                <h4 className="font-medium text-foreground">Two-Factor Authentication</h4>
+                <p className="text-sm text-muted-foreground">Require 2FA for admin accounts</p>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-green-700 bg-green-100">
+                <Badge variant="secondary" className="text-green-700 bg-green-100 dark:bg-green-900/30 dark:text-green-400">
                   Enabled
                 </Badge>
                 <Button variant="outline" size="sm">
@@ -183,13 +183,13 @@ export default function AdminSettingsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-card">
               <div>
-                <h4 className="font-medium">Session Timeout</h4>
-                <p className="text-sm text-gray-500">Automatic logout after inactivity</p>
+                <h4 className="font-medium text-foreground">Session Timeout</h4>
+                <p className="text-sm text-muted-foreground">Automatic logout after inactivity</p>
               </div>
               <div className="flex items-center gap-2">
-                <select className="px-3 py-1 border rounded text-sm">
+                <select className="px-3 py-1 border border-input rounded text-sm bg-background text-foreground">
                   <option value="30">30 minutes</option>
                   <option value="60">1 hour</option>
                   <option value="120">2 hours</option>
@@ -198,10 +198,10 @@ export default function AdminSettingsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-card">
               <div>
-                <h4 className="font-medium">Password Policy</h4>
-                <p className="text-sm text-gray-500">Minimum password requirements</p>
+                <h4 className="font-medium text-foreground">Password Policy</h4>
+                <p className="text-sm text-muted-foreground">Minimum password requirements</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline">8+ chars, symbols</Badge>
@@ -282,20 +282,20 @@ export default function AdminSettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border rounded-lg text-center">
-              <h4 className="font-medium mb-2">Database Size</h4>
+            <div className="p-4 border border-border rounded-lg text-center bg-card">
+              <h4 className="font-medium mb-2 text-foreground">Database Size</h4>
               <p className="text-2xl font-bold text-blue-600">2.4 GB</p>
-              <p className="text-sm text-gray-500">Total storage used</p>
+              <p className="text-sm text-muted-foreground">Total storage used</p>
             </div>
-            <div className="p-4 border rounded-lg text-center">
-              <h4 className="font-medium mb-2">Backup Status</h4>
+            <div className="p-4 border border-border rounded-lg text-center bg-card">
+              <h4 className="font-medium mb-2 text-foreground">Backup Status</h4>
               <p className="text-2xl font-bold text-green-600">✓</p>
-              <p className="text-sm text-gray-500">Last: 2 hours ago</p>
+              <p className="text-sm text-muted-foreground">Last: 2 hours ago</p>
             </div>
-            <div className="p-4 border rounded-lg text-center">
-              <h4 className="font-medium mb-2">Connections</h4>
+            <div className="p-4 border border-border rounded-lg text-center bg-card">
+              <h4 className="font-medium mb-2 text-foreground">Connections</h4>
               <p className="text-2xl font-bold text-purple-600">23</p>
-              <p className="text-sm text-gray-500">Active connections</p>
+              <p className="text-sm text-muted-foreground">Active connections</p>
             </div>
           </div>
           
@@ -368,16 +368,16 @@ interface ApiKeyItemProps {
 
 function ApiKeyItem({ name, key, created, lastUsed, status }: ApiKeyItemProps) {
   return (
-    <div className="flex items-center justify-between p-3 border rounded-lg">
+    <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
-          <span className="font-medium">{name}</span>
+          <span className="font-medium text-foreground">{name}</span>
           <Badge variant={status === "active" ? "secondary" : "outline"}>
             {status}
           </Badge>
         </div>
-        <p className="text-sm text-gray-600 font-mono">{key}</p>
-        <p className="text-xs text-gray-500">
+        <p className="text-sm text-muted-foreground font-mono">{key}</p>
+        <p className="text-xs text-muted-foreground">
           Created: {created} • Last used: {lastUsed}
         </p>
       </div>
@@ -401,18 +401,18 @@ interface NotificationToggleProps {
 
 function NotificationToggle({ title, description, enabled }: NotificationToggleProps) {
   return (
-    <div className="flex items-center justify-between p-3 border rounded-lg">
+    <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
       <div>
-        <h4 className="font-medium">{title}</h4>
-        <p className="text-sm text-gray-500">{description}</p>
+        <h4 className="font-medium text-foreground">{title}</h4>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       <div className="flex items-center gap-2">
         <input 
           type="checkbox" 
           defaultChecked={enabled}
-          className="rounded"
+          className="rounded border-input"
         />
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-muted-foreground">
           {enabled ? "Enabled" : "Disabled"}
         </span>
       </div>

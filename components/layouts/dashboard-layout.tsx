@@ -15,6 +15,20 @@ import {
   ModalTitle,
   ModalTrigger,
 } from "@/components/ui/modal"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { RoleBasedNavigation } from "@/components/rbac/role-based-navigation"
 import {
   Menu,
@@ -25,7 +39,10 @@ import {
   LogOut,
   Bell,
   Search,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft,
+  PanelLeftClose,
+  PanelLeft
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme"
 import { cn } from "@/lib/utils"
@@ -36,6 +53,7 @@ export interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
     <div className="min-h-screen bg-background flex w-full overflow-hidden">
@@ -49,15 +67,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-48 bg-card shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        "fixed inset-y-0 left-0 z-50 bg-card shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full",
+        sidebarCollapsed ? "lg:w-16" : "lg:w-64",
+        "w-64" // Mobile width
       )}>
-        <DashboardSidebar onClose={() => setSidebarOpen(false)} />
+        <DashboardSidebar 
+          onClose={() => setSidebarOpen(false)} 
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
       </div>
 
       {/* Main content */}
       <div className="flex-1 w-full min-w-0">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+        <DashboardHeader 
+          onMenuClick={() => setSidebarOpen(true)}
+          sidebarCollapsed={sidebarCollapsed}
+        />
         <main className="py-4">
           <div className="w-full px-4">
             <DashboardBreadcrumbs />
@@ -73,87 +100,186 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
 interface DashboardSidebarProps {
   onClose: () => void
+  collapsed: boolean
+  onToggleCollapse: () => void
 }
 
-function DashboardSidebar({ onClose }: DashboardSidebarProps) {
+function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSidebarProps) {
   const { data: session } = useSession()
 
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center justify-between px-6 border-b">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
+      <div className={cn(
+        "flex h-16 items-center border-b transition-all duration-300",
+        collapsed ? "justify-center px-2" : "justify-between px-6"
+      )}>
+        <Link href="/" className={cn(
+          "flex items-center",
+          collapsed ? "space-x-0" : "space-x-2"
+        )}>
+          <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">MS</span>
           </div>
-          <span className="font-bold text-xl text-foreground">Micro SaaS</span>
+          {!collapsed && (
+            <span className="font-bold text-xl text-foreground whitespace-nowrap">Micro SaaS</span>
+          )}
         </Link>
+        {!collapsed && (
+          <button
+            onClick={onClose}
+            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
+      </div>
+
+      {/* Collapse toggle button (desktop only) */}
+      <div className={cn(
+        "hidden lg:flex border-b py-2",
+        collapsed ? "justify-center px-2" : "justify-end px-4"
+      )}>
         <button
-          onClick={onClose}
-          className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600"
+          onClick={onToggleCollapse}
+          className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <X className="h-5 w-5" />
+          {collapsed ? (
+            <PanelLeft className="h-4 w-4" />
+          ) : (
+            <PanelLeftClose className="h-4 w-4" />
+          )}
         </button>
       </div>
 
       {/* User info */}
       {session?.user && (
-        <div className="p-4 border-b">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={session.user.image || undefined} />
-              <AvatarFallback>
-                {session.user.name?.charAt(0) || session.user.email?.charAt(0) || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">
-                {session.user.name || "Unknown User"}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">
-                {session.user.email}
-              </p>
-              {session.user.roles && session.user.roles.length > 0 && (
-                <div className="flex gap-1 mt-1">
-                  {session.user.roles.slice(0, 2).map((role: any) => (
-                    <Badge key={role.id} variant="secondary" className="text-xs">
-                      {role.name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
+        <div className={cn(
+          "border-b transition-all duration-300",
+          collapsed ? "p-2" : "p-4"
+        )}>
+          {collapsed ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex justify-center cursor-pointer">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={session.user.image || undefined} />
+                      <AvatarFallback>
+                        {session.user.name?.charAt(0) || session.user.email?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <div className="text-sm">
+                    <p className="font-medium">{session.user.name || "Unknown User"}</p>
+                    <p className="text-muted-foreground">{session.user.email}</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <div className="flex items-center space-x-3">
+              <Avatar className="h-10 w-10 flex-shrink-0">
+                <AvatarImage src={session.user.image || undefined} />
+                <AvatarFallback>
+                  {session.user.name?.charAt(0) || session.user.email?.charAt(0) || "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {session.user.name || "Unknown User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {session.user.email}
+                </p>
+                {session.user.roles && session.user.roles.length > 0 && (
+                  <div className="flex gap-1 mt-1 flex-wrap">
+                    {session.user.roles.slice(0, 2).map((role: any) => (
+                      <Badge key={role.id} variant="secondary" className="text-xs">
+                        {role.name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-4">
         <RoleBasedNavigation
-          className="px-4"
+          className={collapsed ? "px-2" : "px-4"}
           itemClassName="mb-1"
           showIcons={true}
+          collapsed={collapsed}
         />
       </div>
 
       {/* Footer */}
-      <div className="border-t p-4">
+      <div className={cn(
+        "border-t transition-all duration-300",
+        collapsed ? "p-2" : "p-4"
+      )}>
         <div className="space-y-2">
-          <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-            <Link href="/settings">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-            onClick={() => signOut({ callbackUrl: "/" })}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+          {collapsed ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full justify-center p-2" 
+                    asChild
+                  >
+                    <Link href="/admin/settings">
+                      <Settings className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Settings</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-center p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Sign Out</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+                <Link href="/admin/settings">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -162,9 +288,10 @@ function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
 interface DashboardHeaderProps {
   onMenuClick: () => void
+  sidebarCollapsed: boolean
 }
 
-function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+function DashboardHeader({ onMenuClick, sidebarCollapsed }: DashboardHeaderProps) {
   const { data: session } = useSession()
 
   return (
@@ -197,10 +324,54 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
             <ThemeToggle />
 
             {/* Notifications */}
-            <button className="p-2 text-muted-foreground hover:text-foreground relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 text-muted-foreground hover:text-foreground relative">
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="max-h-[400px] overflow-y-auto">
+                  <DropdownMenuItem className="flex flex-col items-start p-3 cursor-pointer">
+                    <div className="flex items-start gap-3 w-full">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">New user registered</p>
+                        <p className="text-xs text-muted-foreground">John Doe just signed up</p>
+                        <p className="text-xs text-muted-foreground mt-1">2 minutes ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex flex-col items-start p-3 cursor-pointer">
+                    <div className="flex items-start gap-3 w-full">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">System update completed</p>
+                        <p className="text-xs text-muted-foreground">All services are running normally</p>
+                        <p className="text-xs text-muted-foreground mt-1">1 hour ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex flex-col items-start p-3 cursor-pointer">
+                    <div className="flex items-start gap-3 w-full">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">High CPU usage detected</p>
+                        <p className="text-xs text-muted-foreground">Server load at 85%</p>
+                        <p className="text-xs text-muted-foreground mt-1">3 hours ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-center justify-center cursor-pointer">
+                  View all notifications
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* User menu */}
             {session?.user && <UserMenu user={session.user} />}
@@ -228,19 +399,19 @@ function DashboardBreadcrumbs() {
     <nav className="flex mb-6" aria-label="Breadcrumb">
       <ol className="flex items-center space-x-2">
         <li>
-          <Link href="/" className="text-gray-500 hover:text-gray-700">
+          <Link href="/" className="text-muted-foreground hover:text-foreground">
             <Home className="h-4 w-4" />
           </Link>
         </li>
         {breadcrumbs.map((breadcrumb, index) => (
           <li key={breadcrumb.href} className="flex items-center">
-            <ChevronRight className="h-4 w-4 text-gray-400 mx-2" />
+            <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
             {breadcrumb.isLast ? (
-              <span className="text-gray-900 font-medium">{breadcrumb.label}</span>
+              <span className="text-foreground font-medium">{breadcrumb.label}</span>
             ) : (
               <Link
                 href={breadcrumb.href}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-muted-foreground hover:text-foreground"
               >
                 {breadcrumb.label}
               </Link>
@@ -267,7 +438,7 @@ function UserMenu({ user }: UserMenuProps) {
               {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
-          <span className="hidden md:block text-sm font-medium text-gray-700">
+          <span className="hidden md:block text-sm font-medium text-foreground">
             {user.name || "User"}
           </span>
         </button>
@@ -280,7 +451,7 @@ function UserMenu({ user }: UserMenuProps) {
 
         <div className="space-y-4">
           {/* User Info */}
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center space-x-4 p-4 bg-accent rounded-lg">
             <Avatar className="h-12 w-12">
               <AvatarImage src={user.image || undefined} />
               <AvatarFallback className="text-lg">
@@ -288,8 +459,8 @@ function UserMenu({ user }: UserMenuProps) {
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-semibold">{user.name || "Unknown User"}</h3>
-              <p className="text-sm text-gray-600">{user.email}</p>
+              <h3 className="font-semibold text-foreground">{user.name || "Unknown User"}</h3>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
               {user.roles && user.roles.length > 0 && (
                 <div className="flex gap-1 mt-1">
                   {user.roles.map((role: any) => (
@@ -307,14 +478,14 @@ function UserMenu({ user }: UserMenuProps) {
           {/* Menu Items */}
           <div className="space-y-2">
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-              <Link href="/profile">
+              <Link href="/admin/profile">
                 <User className="h-4 w-4 mr-2" />
                 View Profile
               </Link>
             </Button>
 
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-              <Link href="/settings">
+              <Link href="/admin/settings">
                 <Settings className="h-4 w-4 mr-2" />
                 Account Settings
               </Link>
@@ -325,7 +496,7 @@ function UserMenu({ user }: UserMenuProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut className="h-4 w-4 mr-2" />

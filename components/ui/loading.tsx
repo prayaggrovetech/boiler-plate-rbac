@@ -34,8 +34,8 @@ export function LoadingState({
   return (
     <div className={cn("flex items-center justify-center p-8", className)}>
       <div className="text-center">
-        <LoadingSpinner size={size} className="mx-auto mb-2" />
-        <p className="text-sm text-gray-600">{message}</p>
+        <LoadingSpinner size={size} className="mx-auto mb-2 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">{message}</p>
       </div>
     </div>
   )
@@ -47,11 +47,11 @@ interface PageLoadingProps {
 
 export function PageLoading({ message = "Loading page..." }: PageLoadingProps) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <LoadingSpinner size="lg" className="mx-auto mb-4 text-blue-600" />
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Please wait</h2>
-        <p className="text-gray-600">{message}</p>
+        <LoadingSpinner size="lg" className="mx-auto mb-4 text-primary" />
+        <h2 className="text-lg font-semibold text-foreground mb-2">Please wait</h2>
+        <p className="text-muted-foreground">{message}</p>
       </div>
     </div>
   )
@@ -93,7 +93,7 @@ export function TableLoading({ rows = 5, columns = 4 }: TableLoadingProps) {
           {Array.from({ length: columns }).map((_, j) => (
             <div
               key={j}
-              className="h-4 bg-gray-200 rounded animate-pulse flex-1"
+              className="h-4 bg-muted rounded animate-pulse flex-1"
             />
           ))}
         </div>
@@ -108,10 +108,10 @@ interface CardLoadingProps {
 
 export function CardLoading({ className }: CardLoadingProps) {
   return (
-    <div className={cn("border rounded-lg p-6 space-y-4", className)}>
-      <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
-      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
-      <div className="h-4 bg-gray-200 rounded animate-pulse w-5/6" />
+    <div className={cn("border border-border bg-card rounded-lg p-6 space-y-4", className)}>
+      <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+      <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
+      <div className="h-4 bg-muted rounded animate-pulse w-5/6" />
     </div>
   )
 }

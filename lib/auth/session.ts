@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth"
-import { authConfig } from "./config"
+import { auth } from "./config"
 import { getUserWithRoles } from "@/lib/db/users"
 import { transformDatabaseUser } from "@/lib/rbac/utils"
 import { UserWithRoles } from "@/lib/rbac/types"
@@ -8,7 +7,7 @@ import { UserWithRoles } from "@/lib/rbac/types"
  * Get current session on server side
  */
 export async function getSession() {
-  return await getServerSession(authConfig)
+  return await auth()
 }
 
 /**

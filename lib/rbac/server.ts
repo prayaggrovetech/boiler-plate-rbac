@@ -1,5 +1,4 @@
-import { getServerSession } from 'next-auth'
-import { authConfig } from '@/lib/auth/config'
+import { auth } from '@/lib/auth'
 import { getUserWithRoles } from '@/lib/db/users'
 import { PermissionChecker } from './permissions'
 import { UserWithRoles, Role } from './types'
@@ -14,7 +13,7 @@ import { redirect } from 'next/navigation'
  */
 export async function getCurrentUser(): Promise<UserWithRoles | null> {
   try {
-    const session = await getServerSession(authConfig)
+    const session = await auth()
     
     if (!session?.user?.id) {
       return null

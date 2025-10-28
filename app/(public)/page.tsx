@@ -15,48 +15,48 @@ export default function HomePage() {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 w-full h-full">
-          <div className="absolute top-0 -left-4 w-96 h-96 bg-slate-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-          <div className="absolute top-0 -right-4 w-96 h-96 bg-gray-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-96 h-96 bg-slate-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+          <div className="absolute top-0 -left-4 w-96 h-96 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 animate-blob"></div>
+          <div className="absolute top-0 -right-4 w-96 h-96 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-200 dark:bg-pink-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
         </div>
 
         {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb04_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb04_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:60px_60px]"></div>
 
         {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-full mb-8">
+        <div className="relative z-10 container mx-auto px-4 text-center py-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-card/60 backdrop-blur-sm border border-border rounded-full mb-8">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-gray-700 text-sm font-medium">Production Ready • Trusted by 10k+ developers</span>
+            <span className="text-foreground text-sm font-medium">Production Ready • Trusted by 10k+ developers</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
             Build Your
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient-x">
+            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               SaaS Empire
             </span>
-            <span className="block text-4xl md:text-5xl lg:text-6xl text-gray-600 font-light">in record time</span>
+            <span className="block text-4xl md:text-5xl lg:text-6xl text-muted-foreground font-light">in record time</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-            The most advanced micro SaaS boilerplate with <span className="text-blue-600 font-semibold">Next.js 14+</span>,
-            <span className="text-purple-600 font-semibold"> dynamic RBAC</span>, and
-            <span className="text-pink-600 font-semibold"> enterprise-grade security</span>.
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
+            The most advanced micro SaaS boilerplate with <span className="text-blue-600 dark:text-blue-400 font-semibold">Next.js 14+</span>,
+            <span className="text-purple-600 dark:text-purple-400 font-semibold"> dynamic RBAC</span>, and
+            <span className="text-pink-600 dark:text-pink-400 font-semibold"> enterprise-grade security</span>.
             Ship faster than ever before.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <Link href="/signup">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                 <Zap className="mr-2 h-5 w-5" />
                 Start Building Now
               </Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 backdrop-blur-sm px-8 py-4 text-lg font-semibold transition-all duration-300">
+              <Button size="lg" variant="outline" className="px-8 py-6 text-lg font-semibold">
                 <Globe className="mr-2 h-5 w-5" />
                 Explore Features
               </Button>
@@ -66,51 +66,51 @@ export default function HomePage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">10k+</div>
-              <div className="text-gray-500 text-sm">Developers</div>
+              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">10k+</div>
+              <div className="text-muted-foreground text-sm">Developers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">99.9%</div>
-              <div className="text-gray-500 text-sm">Uptime</div>
+              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">99.9%</div>
+              <div className="text-muted-foreground text-sm">Uptime</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">50+</div>
-              <div className="text-gray-500 text-sm">Features</div>
+              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">50+</div>
+              <div className="text-muted-foreground text-sm">Features</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">24/7</div>
-              <div className="text-gray-500 text-sm">Support</div>
+              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">24/7</div>
+              <div className="text-muted-foreground text-sm">Support</div>
             </div>
           </div>
         </div>
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-500 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 border-muted-foreground rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-muted-foreground rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-32 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+      <section className="py-32 bg-muted/30 relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-100 rounded-full opacity-50 blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-32 h-32 bg-blue-200 dark:bg-blue-900 rounded-full opacity-30 blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full opacity-30 blur-3xl"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
-              <Code className="w-4 h-4 text-blue-600" />
-              <span className="text-blue-700 text-sm font-medium">Enterprise Grade Technology</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-full mb-6">
+              <Code className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="text-blue-700 dark:text-blue-300 text-sm font-medium">Enterprise Grade Technology</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
               Everything You Need
-              <span className="block text-3xl md:text-4xl text-gray-600 font-light mt-2">to dominate your market</span>
+              <span className="block text-3xl md:text-4xl text-muted-foreground font-light mt-2">to dominate your market</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Built with cutting-edge technologies and battle-tested patterns.
               From authentication to deployment, we've got you covered.
             </p>
@@ -163,37 +163,37 @@ export default function HomePage() {
 
           {/* Tech Stack */}
           <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8">Powered by Industry Leaders</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-8">Powered by Industry Leaders</h3>
             <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-              <div className="text-lg font-semibold text-gray-700">Next.js</div>
-              <div className="text-lg font-semibold text-gray-700">TypeScript</div>
-              <div className="text-lg font-semibold text-gray-700">Prisma</div>
-              <div className="text-lg font-semibold text-gray-700">Tailwind CSS</div>
-              <div className="text-lg font-semibold text-gray-700">NextAuth.js</div>
-              <div className="text-lg font-semibold text-gray-700">Docker</div>
+              <div className="text-lg font-semibold text-muted-foreground">Next.js</div>
+              <div className="text-lg font-semibold text-muted-foreground">TypeScript</div>
+              <div className="text-lg font-semibold text-muted-foreground">Prisma</div>
+              <div className="text-lg font-semibold text-muted-foreground">Tailwind CSS</div>
+              <div className="text-lg font-semibold text-muted-foreground">NextAuth.js</div>
+              <div className="text-lg font-semibold text-muted-foreground">Docker</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="py-32 bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-hidden">
+      <section className="py-32 bg-slate-50 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px] opacity-20"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.08)_1px,transparent_0)] bg-[length:20px_20px] opacity-50 dark:opacity-20"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full mb-6">
-              <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-white/90 text-sm font-medium">Launch Special • 50% Off First Year</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-white/5 backdrop-blur-sm border border-blue-200 dark:border-white/10 rounded-full mb-6">
+              <Zap className="w-4 h-4 text-yellow-600 dark:text-yellow-300" />
+              <span className="text-slate-700 dark:text-white/80 text-sm font-medium">Launch Special • 50% Off First Year</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6">
               Simple, Transparent
-              <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-300 dark:to-purple-300 bg-clip-text text-transparent">
                 Pricing
               </span>
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-600 dark:text-white/60 max-w-3xl mx-auto leading-relaxed">
               No hidden fees, no surprises. Choose the plan that scales with your ambitions.
               All plans include our core features and 24/7 support.
             </p>
@@ -263,42 +263,42 @@ export default function HomePage() {
 
           {/* Money Back Guarantee */}
           <div className="text-center mt-16">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border border-green-500/30 rounded-full">
-              <Check className="w-5 h-5 text-green-400" />
-              <span className="text-green-300 font-medium">30-day money-back guarantee</span>
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-100 dark:bg-green-500/10 border border-green-300 dark:border-green-500/20 rounded-full">
+              <Check className="w-5 h-5 text-green-600 dark:text-green-300" />
+              <span className="text-green-700 dark:text-green-200 font-medium">30-day money-back guarantee</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+      <section className="py-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-900 dark:via-purple-900 dark:to-pink-900 relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
-          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.05)_0%,transparent_50%)]"></div>
+          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05)_0%,transparent_50%)]"></div>
         </div>
 
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Ready to Build the
-              <span className="block text-yellow-300">Next Big Thing?</span>
+              <span className="block text-yellow-300 dark:text-yellow-200">Next Big Thing?</span>
             </h2>
-            <p className="text-xl md:text-2xl text-white/80 mb-12 leading-relaxed">
-              Join <span className="font-bold text-yellow-300">10,000+</span> developers who chose our boilerplate
+            <p className="text-xl md:text-2xl text-white/90 dark:text-white/80 mb-12 leading-relaxed">
+              Join <span className="font-bold text-yellow-300 dark:text-yellow-200">10,000+</span> developers who chose our boilerplate
               to launch their SaaS dreams. Your empire starts here.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
               <Link href="/signup">
-                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-bold shadow-2xl hover:shadow-white/25 transition-all duration-300 transform hover:scale-105">
+                <Button size="lg" className="bg-white dark:bg-white/95 text-purple-600 dark:text-purple-700 hover:bg-gray-100 dark:hover:bg-white px-8 py-4 text-lg font-bold shadow-2xl hover:shadow-white/25 dark:hover:shadow-white/20 transition-all duration-300 transform hover:scale-105">
                   <Zap className="mr-2 h-5 w-5" />
                   Start Your Empire Today
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 text-lg font-semibold transition-all duration-300">
+                <Button size="lg" variant="outline" className="border-white/50 dark:border-white/30 text-black dark:text-white hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm px-8 py-4 text-lg font-semibold transition-all duration-300">
                   <Users className="mr-2 h-5 w-5" />
                   Talk to Our Experts
                 </Button>
@@ -309,19 +309,19 @@ export default function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-3xl font-bold text-white mb-2">4.9/5</div>
-                <div className="text-white/60 text-sm">Developer Rating</div>
+                <div className="text-white/70 dark:text-white/60 text-sm">Developer Rating</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white mb-2">10k+</div>
-                <div className="text-white/60 text-sm">Active Projects</div>
+                <div className="text-white/70 dark:text-white/60 text-sm">Active Projects</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white mb-2">$2M+</div>
-                <div className="text-white/60 text-sm">Revenue Generated</div>
+                <div className="text-white/70 dark:text-white/60 text-sm">Revenue Generated</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white mb-2">150+</div>
-                <div className="text-white/60 text-sm">Countries</div>
+                <div className="text-white/70 dark:text-white/60 text-sm">Countries</div>
               </div>
             </div>
           </div>
@@ -341,18 +341,18 @@ interface ModernFeatureCardProps {
 
 function ModernFeatureCard({ icon, title, description, gradient, delay }: ModernFeatureCardProps) {
   return (
-    <Card className={`group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up`} style={{ animationDelay: `${delay}ms` }}>
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+    <Card className={`group relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`} style={{ animationDelay: `${delay}ms` }}>
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300`}></div>
       <CardHeader className="relative z-10 text-center pb-4">
         <div className={`mx-auto mb-6 w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
           {icon}
         </div>
-        <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors">
+        <CardTitle className="text-xl font-bold text-foreground">
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="relative z-10 text-center">
-        <CardDescription className="text-gray-600 leading-relaxed">
+        <CardDescription className="leading-relaxed">
           {description}
         </CardDescription>
       </CardContent>
@@ -386,8 +386,8 @@ function ModernPricingCard({
   gradient
 }: ModernPricingCardProps) {
   return (
-    <Card className={`relative overflow-hidden border-0 bg-white/5 backdrop-blur-sm ${popular ? 'ring-2 ring-purple-400 shadow-2xl shadow-purple-500/25 scale-105' : 'hover:bg-white/10'} transition-all duration-300 hover:scale-105`}>
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-50`}></div>
+    <Card className={`relative overflow-hidden bg-white dark:bg-white/[0.02] backdrop-blur-sm border-2 ${popular ? 'border-purple-500 shadow-2xl shadow-purple-500/25 dark:shadow-purple-500/15 scale-105' : 'border-slate-200 dark:border-white/10 hover:border-purple-300 dark:hover:border-purple-500/50'} transition-all duration-300 hover:scale-105`}>
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 dark:opacity-30`}></div>
 
       {popular && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
@@ -398,28 +398,28 @@ function ModernPricingCard({
       )}
 
       <CardHeader className="text-center relative z-10 pb-6">
-        <CardTitle className="text-2xl font-bold text-white mb-2">{name}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{name}</CardTitle>
         <div className="mb-4">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <span className="text-5xl font-bold text-white">{price}</span>
+            <span className="text-5xl font-bold text-slate-900 dark:text-white">{price}</span>
             <div className="text-left">
-              <div className="text-white/60 line-through text-lg">{originalPrice}</div>
-              <div className="text-white/80 text-sm">/{period}</div>
+              <div className="text-slate-500 dark:text-white/50 line-through text-lg">{originalPrice}</div>
+              <div className="text-slate-600 dark:text-white/70 text-sm">/{period}</div>
             </div>
           </div>
-          <div className="inline-flex items-center gap-1 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full">
-            <span className="text-green-300 text-sm font-medium">50% OFF</span>
+          <div className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-500/10 border border-green-300 dark:border-green-500/20 rounded-full">
+            <span className="text-green-700 dark:text-green-200 text-sm font-medium">50% OFF</span>
           </div>
         </div>
-        <CardDescription className="text-white/70 text-base">{description}</CardDescription>
+        <CardDescription className="text-slate-600 dark:text-white/60 text-base">{description}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6 relative z-10">
         <ul className="space-y-3">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center">
-              <Check className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
-              <span className="text-white/90 text-sm">{feature}</span>
+              <Check className="h-5 w-5 text-green-600 dark:text-green-300 mr-3 flex-shrink-0" />
+              <span className="text-slate-700 dark:text-white/80 text-sm">{feature}</span>
             </li>
           ))}
         </ul>
@@ -428,7 +428,7 @@ function ModernPricingCard({
           <Button
             className={`w-full py-3 font-semibold transition-all duration-300 ${buttonVariant === 'default'
               ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/25'
-              : 'border-white/30 text-white hover:bg-white/10 backdrop-blur-sm'
+              : 'border-slate-300 dark:border-white/20 text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 backdrop-blur-sm'
               }`}
             variant={buttonVariant}
           >

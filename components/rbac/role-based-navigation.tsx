@@ -8,6 +8,12 @@ import { useHasPermission } from "./hooks/use-permission"
 import { NAVIGATION_ROUTES, type RouteMetadata } from "@/lib/rbac/routes"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { 
   LayoutDashboard, 
   Users, 
@@ -58,6 +64,7 @@ export interface RoleBasedNavigationProps {
   activeClassName?: string
   renderItem?: (item: NavigationItem) => React.ReactNode
   showIcons?: boolean
+  collapsed?: boolean
 }
 
 /**
@@ -68,7 +75,8 @@ export function RoleBasedNavigation({
   itemClassName,
   activeClassName = "bg-primary/10 text-primary",
   renderItem,
-  showIcons = true
+  showIcons = true,
+  collapsed = false
 }: RoleBasedNavigationProps) {
   const pathname = usePathname()
   const { roleNames, isLoading } = useUserRoles()
@@ -107,19 +115,22 @@ export function RoleBasedNavigation({
   }
   
   return (
-    <nav className={className}>
-      <ul className="space-y-1">
-        {visibleItems.map((item) => (
-          <NavigationItemComponent
-            key={item.path}
-            item={item}
-            itemClassName={itemClassName}
-            activeClassName={activeClassName}
-            showIcons={showIcons}
-          />
-        ))}
-      </ul>
-    </nav>
+    <TooltipProvider delayDuration={0}>
+      <nav className={className}>
+        <ul className="space-y-1">
+          {visibleItems.map((item) => (
+            <NavigationItemComponent
+              key={item.path}
+              item={item}
+              itemClassName={itemClassName}
+              activeClassName={activeClassName}
+              showIcons={showIcons}
+              collapsed={collapsed}
+            />
+          ))}
+        </ul>
+      </nav>
+    </TooltipProvider>
   )
 }
 
@@ -128,13 +139,15 @@ interface NavigationItemComponentProps {
   itemClassName?: string
   activeClassName?: string
   showIcons?: boolean
+  collapsed?: boolean
 }
 
 function NavigationItemComponent({
   item,
   itemClassName,
   activeClassName,
-  showIcons
+  showIcons,
+  collapsed = false
 }: NavigationItemComponentProps) {
   const { hasPermission, isLoading } = useHasPermission(item.permissions[0] || "")
   
@@ -146,21 +159,37 @@ function NavigationItemComponent({
     return null
   }
   
-  return (
-    <li>
-      <Link
-        href={item.path}
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-          item.isActive && activeClassName,
-          itemClassName
-        )}
-      >
-        {showIcons && item.icon && (
-          <IconComponent name={item.icon} className="h-4 w-4" />
-        )}
-        {item.title}
-      </Link>
-    </li>
+  const linkContent = (
+    <Link
+      href={item.path}
+      className={cn(
+        "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+        collapsed ? "justify-center" : "gap-3",
+        item.isActive && activeClassName,
+        itemClassName
+      )}
+    >
+      {showIcons && item.icon && (
+        <IconComponent name={item.icon} className="h-4 w-4 flex-shrink-0" />
+      )}
+      {!collapsed && <span>{item.title}</span>}
+    </Link>
   )
+
+  if (collapsed) {
+    return (
+      <li>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {linkContent}
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>{item.title}</p>
+          </TooltipContent>
+        </Tooltip>
+      </li>
+    )
+  }
+
+  return <li>{linkContent}</li>
 }

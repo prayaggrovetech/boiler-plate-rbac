@@ -91,7 +91,7 @@ export default function AdminAnalyticsPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
-          <p className="mt-2 text-gray-600">Loading analytics...</p>
+          <p className="mt-2 text-muted-foreground">Loading analytics...</p>
         </div>
       </div>
     )
@@ -101,8 +101,8 @@ export default function AdminAnalyticsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">System Analytics</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">System Analytics</h1>
+          <p className="text-muted-foreground mt-2">
             Comprehensive analytics and performance metrics across the entire platform.
           </p>
         </div>
@@ -163,19 +163,19 @@ export default function AdminAnalyticsPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">New Users (This Month)</span>
+                <span className="text-sm text-muted-foreground">New Users (This Month)</span>
                 <Badge variant="secondary">{analyticsData.users.thisMonth.toLocaleString()}</Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Active Users (Daily)</span>
+                <span className="text-sm text-muted-foreground">Active Users (Daily)</span>
                 <Badge variant="secondary">{analyticsData.users.active.toLocaleString()}</Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Retention Rate</span>
+                <span className="text-sm text-muted-foreground">Retention Rate</span>
                 <Badge variant="secondary">{analyticsData.users.retention}</Badge>
               </div>
-              <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">User Growth Chart Placeholder</p>
+              <div className="h-32 bg-muted rounded-lg flex items-center justify-center">
+                <p className="text-muted-foreground">User Growth Chart Placeholder</p>
               </div>
             </div>
           </CardContent>
@@ -194,19 +194,19 @@ export default function AdminAnalyticsPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">MRR (Monthly Recurring)</span>
+                <span className="text-sm text-muted-foreground">MRR (Monthly Recurring)</span>
                 <Badge variant="secondary">$42,350</Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Churn Rate</span>
+                <span className="text-sm text-muted-foreground">Churn Rate</span>
                 <Badge variant="outline">2.1%</Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">ARPU (Avg Revenue Per User)</span>
+                <span className="text-sm text-muted-foreground">ARPU (Avg Revenue Per User)</span>
                 <Badge variant="secondary">$34.50</Badge>
               </div>
-              <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Revenue Chart Placeholder</p>
+              <div className="h-32 bg-muted rounded-lg flex items-center justify-center">
+                <p className="text-muted-foreground">Revenue Chart Placeholder</p>
               </div>
             </div>
           </CardContent>
@@ -311,9 +311,9 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, changeType, icon, period }: MetricCardProps) {
   const changeColor = {
-    positive: "text-green-600",
-    negative: "text-red-600",
-    neutral: "text-gray-600"
+    positive: "text-green-600 dark:text-green-400",
+    negative: "text-red-600 dark:text-red-400",
+    neutral: "text-muted-foreground"
   }[changeType]
 
   return (
@@ -321,11 +321,11 @@ function MetricCard({ title, value, change, changeType, icon, period }: MetricCa
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
             <p className={`text-sm ${changeColor}`}>{change} {period}</p>
           </div>
-          <div className="text-gray-400">
+          <div className="text-muted-foreground">
             {icon}
           </div>
         </div>
@@ -345,10 +345,10 @@ function RegionItem({ region, percentage, users }: RegionItemProps) {
     <div className="flex items-center justify-between">
       <div className="flex-1">
         <div className="flex justify-between text-sm mb-1">
-          <span className="font-medium">{region}</span>
-          <span className="text-gray-500">{users} users</span>
+          <span className="font-medium text-foreground">{region}</span>
+          <span className="text-muted-foreground">{users} users</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-muted rounded-full h-2">
           <div 
             className="bg-blue-600 h-2 rounded-full" 
             style={{ width: `${percentage}%` }}
@@ -367,20 +367,20 @@ interface PerformanceItemProps {
 
 function PerformanceItem({ label, value, status }: PerformanceItemProps) {
   const statusColor = {
-    good: "text-green-600",
-    warning: "text-yellow-600",
-    error: "text-red-600"
+    good: "text-green-600 dark:text-green-400",
+    warning: "text-yellow-600 dark:text-yellow-400",
+    error: "text-red-600 dark:text-red-400"
   }[status]
 
   const statusBg = {
-    good: "bg-green-100",
-    warning: "bg-yellow-100", 
-    error: "bg-red-100"
+    good: "bg-green-100 dark:bg-green-900/30",
+    warning: "bg-yellow-100 dark:bg-yellow-900/30", 
+    error: "bg-red-100 dark:bg-red-900/30"
   }[status]
 
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-muted-foreground">{label}</span>
       <div className={`px-2 py-1 rounded-full ${statusBg}`}>
         <span className={`text-sm font-medium ${statusColor}`}>{value}</span>
       </div>
@@ -396,15 +396,15 @@ interface FeatureUsageItemProps {
 function FeatureUsageItem({ feature, usage }: FeatureUsageItemProps) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-600">{feature}</span>
+      <span className="text-sm text-muted-foreground">{feature}</span>
       <div className="flex items-center gap-2">
-        <div className="w-16 bg-gray-200 rounded-full h-2">
+        <div className="w-16 bg-muted rounded-full h-2">
           <div 
             className="bg-blue-600 h-2 rounded-full" 
             style={{ width: `${usage}%` }}
           ></div>
         </div>
-        <span className="text-sm font-medium text-gray-900 w-8">{usage}%</span>
+        <span className="text-sm font-medium text-foreground w-8">{usage}%</span>
       </div>
     </div>
   )

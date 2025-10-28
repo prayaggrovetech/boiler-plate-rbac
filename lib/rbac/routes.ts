@@ -53,6 +53,11 @@ export const ROUTE_PERMISSIONS: RoutePermission[] = [
     permissions: ['view:settings', 'manage:settings'],
     requireAll: false
   },
+  {
+    path: '/admin/profile',
+    permissions: [],
+    requireAll: false
+  },
 
   // Manager routes - require manager role
   {
@@ -309,6 +314,13 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     icon: 'Settings',
     permissions: ['view:settings'],
     roles: ['admin']
+  },
+  {
+    path: '/admin/profile',
+    title: 'Profile',
+    icon: 'User',
+    permissions: [],
+    roles: ['admin', 'manager']
   },
 
   // Manager routes

@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authConfig } from "@/lib/auth/config"
+import { auth } from "@/lib/auth"
 import { changeUserPassword, changePasswordSchema } from "@/lib/auth/utils"
 import { z } from "zod"
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authConfig)
+    const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Authentication required" },
