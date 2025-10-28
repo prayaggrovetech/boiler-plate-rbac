@@ -27,17 +27,17 @@ export default function ContactPage() {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-4">
               Get in Touch
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
               We're Here to
-              <span className="text-blue-600"> Help</span>
+              <span className="text-blue-600 dark:text-blue-400"> Help</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-muted-foreground mb-8">
               Have questions about our SaaS boilerplate? Need help getting started? 
               Our team is ready to assist you.
             </p>
@@ -46,7 +46,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Options */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
             <ContactOption
@@ -75,7 +75,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-6">
                 Send us a Message
               </h2>
               <Card>
@@ -126,7 +126,7 @@ export default function ContactPage() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-6">
                 Get in Touch
               </h2>
               
@@ -165,13 +165,13 @@ export default function ContactPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
-                      <HelpCircle className="h-8 w-8 text-blue-600" />
+                      <HelpCircle className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-foreground">
                         Frequently Asked Questions
                       </h3>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         Check our FAQ section for quick answers to common questions.
                       </p>
                     </div>
@@ -187,13 +187,13 @@ export default function ContactPage() {
       </section>
 
       {/* Response Time */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
               Our Response Times
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               We're committed to providing timely support for all your needs.
             </p>
           </div>
@@ -243,7 +243,7 @@ function ContactOption({ icon, title, description, contact, action }: ContactOpt
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="font-medium text-gray-900 mb-4">{contact}</p>
+        <p className="font-medium text-foreground mb-4">{contact}</p>
         <Button variant="outline" size="sm">
           {action}
         </Button>
@@ -266,11 +266,11 @@ function ContactInfo({ icon, title, details, description }: ContactInfoProps) {
         {icon}
       </div>
       <div>
-        <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
+        <h3 className="font-semibold text-foreground mb-1">{title}</h3>
         {details.map((detail, index) => (
-          <p key={index} className="text-gray-900">{detail}</p>
+          <p key={index} className="text-foreground">{detail}</p>
         ))}
-        <p className="text-gray-600 text-sm mt-1">{description}</p>
+        <p className="text-muted-foreground text-sm mt-1">{description}</p>
       </div>
     </div>
   )
@@ -290,9 +290,9 @@ function ResponseTime({ icon, title, time, description }: ResponseTimeProps) {
         <div className="mx-auto mb-4">
           {icon}
         </div>
-        <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
-        <div className="text-2xl font-bold text-blue-600 mb-2">{time}</div>
-        <p className="text-gray-600 text-sm">{description}</p>
+        <h3 className="font-semibold text-foreground mb-2">{title}</h3>
+        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">{time}</div>
+        <p className="text-muted-foreground text-sm">{description}</p>
       </CardContent>
     </Card>
   )

@@ -26,17 +26,17 @@ export default function AboutPage() {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-4">
               About Our Platform
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
               Built for Modern
-              <span className="text-blue-600"> SaaS Development</span>
+              <span className="text-blue-600 dark:text-blue-400"> SaaS Development</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-muted-foreground mb-8">
               Our micro SaaS boilerplate combines the latest technologies with proven 
               architectural patterns to help you build scalable, secure applications faster than ever.
             </p>
@@ -45,13 +45,13 @@ export default function AboutPage() {
       </section>
 
       {/* Technology Stack */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Modern Technology Stack
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Built with cutting-edge technologies and best practices for performance, 
               security, and developer experience.
             </p>
@@ -99,13 +99,13 @@ export default function AboutPage() {
       </section>
 
       {/* Features Deep Dive */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Comprehensive Feature Set
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Every feature is designed with scalability, security, and developer 
               experience in mind.
             </p>
@@ -113,7 +113,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              <h3 className="text-2xl font-bold text-foreground mb-6">
                 Dynamic Role-Based Access Control
               </h3>
               <div className="space-y-4">
@@ -135,22 +135,22 @@ export default function AboutPage() {
                 />
               </div>
             </div>
-            <div className="bg-white p-8 rounded-lg shadow-lg">
+            <div className="bg-card p-8 rounded-lg shadow-lg border border-border">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded">
-                  <span className="font-medium">Admin Dashboard</span>
+                <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/30 rounded">
+                  <span className="font-medium text-foreground">Admin Dashboard</span>
                   <Badge variant="success">Full Access</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded">
-                  <span className="font-medium">User Management</span>
+                <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-950/30 rounded">
+                  <span className="font-medium text-foreground">User Management</span>
                   <Badge variant="warning">Manager+</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded">
-                  <span className="font-medium">Profile Settings</span>
+                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/30 rounded">
+                  <span className="font-medium text-foreground">Profile Settings</span>
                   <Badge variant="success">All Users</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-red-50 rounded">
-                  <span className="font-medium">System Settings</span>
+                <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-950/30 rounded">
+                  <span className="font-medium text-foreground">System Settings</span>
                   <Badge variant="destructive">Admin Only</Badge>
                 </div>
               </div>
@@ -160,13 +160,13 @@ export default function AboutPage() {
       </section>
 
       {/* Architecture */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Scalable Architecture
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Designed with clean architecture principles for maintainability and growth.
             </p>
           </div>
@@ -197,19 +197,19 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
+      <section className="py-20 bg-blue-600 dark:bg-blue-900">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Start Building Your SaaS Today
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-100 dark:text-blue-200 mb-8 max-w-2xl mx-auto">
             Get access to the complete boilerplate with documentation, examples, and ongoing updates.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" asChild>
               <Link href="/signup">Get Started Free</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600 dark:hover:text-blue-900" asChild>
               <Link href="/contact">Contact Us</Link>
             </Button>
           </div>
@@ -257,10 +257,10 @@ interface FeaturePointProps {
 function FeaturePoint({ title, description }: FeaturePointProps) {
   return (
     <div className="flex items-start space-x-3">
-      <div className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+      <div className="flex-shrink-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2"></div>
       <div>
-        <h4 className="font-semibold text-gray-900">{title}</h4>
-        <p className="text-gray-600">{description}</p>
+        <h4 className="font-semibold text-foreground">{title}</h4>
+        <p className="text-muted-foreground">{description}</p>
       </div>
     </div>
   )
@@ -282,8 +282,8 @@ function ArchitectureLayer({ title, description, items }: ArchitectureLayerProps
       <CardContent>
         <ul className="space-y-2">
           {items.map((item, index) => (
-            <li key={index} className="text-sm text-gray-600 flex items-center">
-              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
+            <li key={index} className="text-sm text-muted-foreground flex items-center">
+              <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full mr-2"></div>
               {item}
             </li>
           ))}
