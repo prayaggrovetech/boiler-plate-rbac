@@ -131,10 +131,10 @@ export function LoginForm() {
   // Show loading while checking authentication status
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Checking authentication...</p>
+          <p className="mt-2 text-muted-foreground">Checking authentication...</p>
         </div>
       </div>
     )
@@ -143,10 +143,10 @@ export function LoginForm() {
   // Don't render the form if user is authenticated (will redirect)
   if (status === "authenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+          <p className="mt-2 text-muted-foreground">Redirecting to dashboard...</p>
         </div>
       </div>
     )
@@ -177,20 +177,20 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">MS</span>
+          <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+            <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <span className="text-white font-bold text-base">MS</span>
             </div>
-            <span className="font-bold text-xl text-gray-900">Micro SaaS</span>
+            <span className="font-bold text-xl text-foreground">Micro SaaS</span>
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-foreground">
             Welcome back
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted-foreground">
             Sign in to your account to continue
           </p>
         </div>
@@ -217,7 +217,7 @@ export function LoginForm() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormField label="Email Address" required error={errors.email}>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
                     placeholder="Enter your email"
@@ -231,7 +231,7 @@ export function LoginForm() {
 
               <FormField label="Password" required error={errors.password}>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
@@ -242,7 +242,7 @@ export function LoginForm() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -258,7 +258,7 @@ export function LoginForm() {
                 <div className="text-sm">
                   <Link
                     href="/forgot-password"
-                    className="text-blue-600 hover:text-blue-500"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors"
                   >
                     Forgot your password?
                   </Link>
@@ -278,7 +278,7 @@ export function LoginForm() {
 
             <div className="mt-6">
               <Separator className="my-4" />
-              <div className="text-center text-sm text-gray-600 mb-4">
+              <div className="text-center text-sm text-muted-foreground mb-4">
                 Or continue with
               </div>
               
@@ -312,11 +312,11 @@ export function LoginForm() {
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-blue-600 hover:text-blue-500 font-medium"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
                 >
                   Sign up here
                 </Link>

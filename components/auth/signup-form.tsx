@@ -135,13 +135,14 @@ export function SignupForm() {
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<SignupForm> = {}
+        const fieldErrors: Partial<Record<keyof SignupForm, string>> = {}
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof SignupForm] = err.message
+            const field = err.path[0] as keyof SignupForm
+            fieldErrors[field] = err.message
           }
         })
-        setErrors(fieldErrors)
+        setErrors(fieldErrors as Partial<SignupForm>)
       } else {
         toast({
           variant: "destructive",
@@ -157,10 +158,10 @@ export function SignupForm() {
   // Show loading while checking authentication status
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Checking authentication...</p>
+          <p className="mt-2 text-muted-foreground">Checking authentication...</p>
         </div>
       </div>
     )
@@ -169,10 +170,10 @@ export function SignupForm() {
   // Don't render the form if user is authenticated (will redirect)
   if (status === "authenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+          <p className="mt-2 text-muted-foreground">Redirecting to dashboard...</p>
         </div>
       </div>
     )
@@ -193,20 +194,20 @@ export function SignupForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">MS</span>
+          <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+            <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <span className="text-white font-bold text-base">MS</span>
             </div>
-            <span className="font-bold text-xl text-gray-900">Micro SaaS</span>
+            <span className="font-bold text-xl text-foreground">Micro SaaS</span>
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-foreground">
             Create your account
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted-foreground">
             Get started with your free account today
           </p>
         </div>
@@ -223,7 +224,7 @@ export function SignupForm() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormField label="Full Name" required error={errors.name}>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Enter your full name"
@@ -237,7 +238,7 @@ export function SignupForm() {
 
               <FormField label="Email Address" required error={errors.email}>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
                     placeholder="Enter your email"
@@ -251,7 +252,7 @@ export function SignupForm() {
 
               <FormField label="Password" required error={errors.password}>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
@@ -262,7 +263,7 @@ export function SignupForm() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -275,12 +276,12 @@ export function SignupForm() {
                 {formData.password && (
                   <div className="mt-2">
                     <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-gray-600">Password strength:</span>
+                      <span className="text-muted-foreground">Password strength:</span>
                       <span className={`font-medium ${passwordStrength.color}`}>
                         {passwordStrength.level}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-neutral-200 dark:bg-neutral-800 rounded-full h-2">
                       <div
                         className={`bg-current h-2 rounded-full transition-all ${passwordStrength.color} ${passwordStrength.width}`}
                       />
@@ -291,7 +292,7 @@ export function SignupForm() {
 
               <FormField label="Confirm Password" required error={errors.confirmPassword}>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
@@ -302,7 +303,7 @@ export function SignupForm() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -314,7 +315,7 @@ export function SignupForm() {
                 </div>
               </FormField>
 
-              <FormField error={errors.acceptTerms}>
+              <FormField error={errors.acceptTerms as string | undefined}>
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="acceptTerms"
@@ -322,13 +323,13 @@ export function SignupForm() {
                     onCheckedChange={(checked) => handleInputChange("acceptTerms", !!checked)}
                     disabled={isLoading}
                   />
-                  <label htmlFor="acceptTerms" className="text-sm text-gray-600">
+                  <label htmlFor="acceptTerms" className="text-sm text-muted-foreground">
                     I agree to the{" "}
-                    <Link href="/terms" className="text-blue-600 hover:text-blue-500">
+                    <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors">
                       Terms of Service
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="text-blue-600 hover:text-blue-500">
+                    <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors">
                       Privacy Policy
                     </Link>
                   </label>
@@ -348,7 +349,7 @@ export function SignupForm() {
 
             <div className="mt-6">
               <Separator className="my-4" />
-              <div className="text-center text-sm text-gray-600 mb-4">
+              <div className="text-center text-sm text-muted-foreground mb-4">
                 Or continue with
               </div>
               
@@ -382,11 +383,11 @@ export function SignupForm() {
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   href="/login"
-                  className="text-blue-600 hover:text-blue-500 font-medium"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
                 >
                   Sign in here
                 </Link>
