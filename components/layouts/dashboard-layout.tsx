@@ -40,7 +40,6 @@ import {
   Bell,
   Search,
   ChevronRight,
-  ChevronLeft,
   PanelLeftClose,
   PanelLeft
 } from "lucide-react"
@@ -236,7 +235,7 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
                     className="w-full justify-center p-2" 
                     asChild
                   >
-                    <Link href="/admin/settings">
+                    <Link href="/settings">
                       <Settings className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -264,7 +263,7 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
           ) : (
             <>
               <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                <Link href="/admin/settings">
+                <Link href="/settings">
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
                 </Link>
@@ -466,6 +465,22 @@ interface UserMenuProps {
 }
 
 function UserMenu({ user }: UserMenuProps) {
+  // Determine the role prefix for navigation
+  const getRolePrefix = () => {
+    if (!user.roles || user.roles.length === 0) return 'customer'
+    
+    const roleNames = user.roles.map((role: any) => role.name.toLowerCase())
+    
+    // Priority: admin > manager > customer
+    if (roleNames.includes('admin')) return 'admin'
+    if (roleNames.includes('manager')) return 'manager'
+    return 'customer'
+  }
+
+  const rolePrefix = getRolePrefix()
+  const profilePath = `/${rolePrefix}/profile`
+  const settingsPath = '/settings' // Settings is now universal
+
   return (
     <Modal>
       <ModalTrigger asChild>
@@ -516,14 +531,14 @@ function UserMenu({ user }: UserMenuProps) {
           {/* Menu Items */}
           <div className="space-y-2">
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-              <Link href="/admin/profile">
+              <Link href={profilePath}>
                 <User className="h-4 w-4 mr-2" />
                 View Profile
               </Link>
             </Button>
 
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-              <Link href="/admin/settings">
+              <Link href={settingsPath}>
                 <Settings className="h-4 w-4 mr-2" />
                 Account Settings
               </Link>
