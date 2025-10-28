@@ -12,6 +12,13 @@ export const ROUTE_PERMISSIONS: RoutePermission[] = [
     requireAll: false
   },
   
+  // Settings - accessible by all authenticated users
+  {
+    path: '/settings',
+    permissions: [],
+    requireAll: false
+  },
+  
   // Admin routes - require admin or manager role
   {
     path: '/admin/dashboard',
@@ -140,6 +147,8 @@ export const PUBLIC_ROUTES = [
   '/contact',
   '/login',
   '/signup',
+  '/forgot-password',
+  '/reset-password',
   '/api/auth/callback/google',
   '/api/auth/callback/credentials',
   '/api/auth/signin',
