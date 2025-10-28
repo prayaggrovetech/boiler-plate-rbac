@@ -40,10 +40,10 @@ export function ForgotPasswordForm() {
   // Show loading while checking authentication status
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Checking authentication...</p>
+          <p className="mt-2 text-muted-foreground">Checking authentication...</p>
         </div>
       </div>
     )
@@ -52,10 +52,10 @@ export function ForgotPasswordForm() {
   // Don't render the form if user is authenticated (will redirect)
   if (status === "authenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+          <p className="mt-2 text-muted-foreground">Redirecting to dashboard...</p>
         </div>
       </div>
     )
@@ -78,9 +78,20 @@ export function ForgotPasswordForm() {
       // Validate form data
       const validatedData = forgotPasswordSchema.parse(formData)
 
-      // Simulate API call for password reset
-      // In a real implementation, this would send a reset email
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Call API to send reset email
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: validatedData.email }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to send reset email")
+      }
 
       setIsSubmitted(true)
       toast({
@@ -100,7 +111,7 @@ export function ForgotPasswordForm() {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "An unexpected error occurred. Please try again.",
+          description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again.",
         })
       }
     } finally {
@@ -110,38 +121,38 @@ export function ForgotPasswordForm() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-              <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MS</span>
+            <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <span className="text-white font-bold text-base">MS</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">Micro SaaS</span>
+              <span className="font-bold text-xl text-foreground">Micro SaaS</span>
             </Link>
           </div>
 
           <Card>
             <CardContent className="p-6 text-center">
-              <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+              <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 Check your email
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 We've sent password reset instructions to{" "}
-                <span className="font-medium text-gray-900">{formData.email}</span>
+                <span className="font-medium text-foreground">{formData.email}</span>
               </p>
               <div className="space-y-4">
                 <Button asChild className="w-full">
                   <Link href="/login">Back to Sign In</Link>
                 </Button>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Didn't receive the email? Check your spam folder or{" "}
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="text-blue-600 hover:text-blue-500 font-medium"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
                   >
                     try again
                   </button>
@@ -155,20 +166,20 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">MS</span>
+          <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+            <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <span className="text-white font-bold text-base">MS</span>
             </div>
-            <span className="font-bold text-xl text-gray-900">Micro SaaS</span>
+            <span className="font-bold text-xl text-foreground">Micro SaaS</span>
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-foreground">
             Forgot your password?
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted-foreground">
             No worries, we'll send you reset instructions
           </p>
         </div>
@@ -185,7 +196,7 @@ export function ForgotPasswordForm() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormField label="Email Address" required error={errors.email}>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
                     placeholder="Enter your email"
@@ -211,7 +222,7 @@ export function ForgotPasswordForm() {
             <div className="mt-6 text-center">
               <Link
                 href="/login"
-                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+                className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to Sign In
