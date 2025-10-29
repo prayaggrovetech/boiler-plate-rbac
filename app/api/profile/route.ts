@@ -29,6 +29,9 @@ export async function GET(request: NextRequest) {
         name: true,
         email: true,
         image: true,
+        phone: true,
+        location: true,
+        bio: true,
         createdAt: true,
         updatedAt: true,
       }
@@ -66,19 +69,25 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json()
     const validatedData = updateProfileSchema.parse(body)
 
+    // Build update data object
+    const updateData: any = {}
+    if (validatedData.name !== undefined) updateData.name = validatedData.name
+    if (validatedData.phone !== undefined) updateData.phone = validatedData.phone
+    if (validatedData.location !== undefined) updateData.location = validatedData.location
+    if (validatedData.bio !== undefined) updateData.bio = validatedData.bio
+
     // Update user profile
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
-      data: {
-        ...(validatedData.name && { name: validatedData.name }),
-        // Note: phone, location, bio would need to be added to the User model
-        // For now, we'll just update the name
-      },
+      data: updateData,
       select: {
         id: true,
         name: true,
         email: true,
         image: true,
+        phone: true,
+        location: true,
+        bio: true,
         updatedAt: true,
       }
     })

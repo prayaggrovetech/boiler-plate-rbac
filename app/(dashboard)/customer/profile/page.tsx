@@ -34,14 +34,28 @@ export default function CustomerProfile() {
     bio: ""
   })
 
-  // Update form data when session changes
+  // Load profile data on mount
   useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await fetch("/api/profile")
+        if (response.ok) {
+          const data = await response.json()
+          setFormData({
+            name: data.name || "",
+            email: data.email || "",
+            phone: data.phone || "",
+            location: data.location || "",
+            bio: data.bio || "",
+          })
+        }
+      } catch (error) {
+        console.error("Failed to load profile:", error)
+      }
+    }
+
     if (session?.user) {
-      setFormData(prev => ({
-        ...prev,
-        name: session.user.name || "",
-        email: session.user.email || "",
-      }))
+      loadProfile()
     }
   }, [session])
 
@@ -55,11 +69,13 @@ export default function CustomerProfile() {
 
     if (result.success && result.data) {
       // Update local form data with the API response
-      setFormData(prev => ({
-        ...prev,
-        name: result.data.name,
-        email: result.data.email,
-      }))
+      setFormData({
+        name: result.data.name || "",
+        email: result.data.email || "",
+        phone: result.data.phone || "",
+        location: result.data.location || "",
+        bio: result.data.bio || "",
+      })
       setIsEditing(false)
     }
   }
