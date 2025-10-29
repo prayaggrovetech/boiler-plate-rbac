@@ -1,14 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { useToast } from "@/components/ui/use-toast"
 import {
   User,
   Mail,
@@ -22,14 +20,12 @@ import {
   Edit
 } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { useProfileUpdate } from "@/hooks/use-profile-update"
 
 export default function CustomerProfile() {
-  const router = useRouter()
-  const { data: session, update: updateSession } = useSession()
-  const { toast } = useToast()
+  const { data: session } = useSession()
+  const { updateProfile, isLoading } = useProfileUpdate()
   const [isEditing, setIsEditing] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
@@ -50,70 +46,21 @@ export default function CustomerProfile() {
   }, [session])
 
   const handleSave = async () => {
-    setIsLoading(true)
+    const result = await updateProfile({
+      name: formData.name,
+      phone: formData.phone,
+      location: formData.location,
+      bio: formData.bio,
+    })
 
-    try {
-      const response = await fetch("/api/profile", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          location: formData.location,
-          bio: formData.bio,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to update profile")
-      }
-
-      console.log("API Response:", data)
-      
-      // Update the local form data immediately for instant UI feedback
-      const newFormData = {
-        name: data.user.name,
-        email: data.user.email,
-        phone: formData.phone,
-        location: formData.location,
-        bio: formData.bio,
-      }
-      
-      setFormData(newFormData)
-      console.log("Updated formData:", newFormData)
-
+    if (result.success && result.data) {
+      // Update local form data with the API response
+      setFormData(prev => ({
+        ...prev,
+        name: result.data.name,
+        email: result.data.email,
+      }))
       setIsEditing(false)
-      
-      // Force re-render by incrementing key
-      setRefreshKey(prev => {
-        const newKey = prev + 1
-        console.log("Refresh key updated:", newKey)
-        return newKey
-      })
-
-      toast({
-        title: "Profile Updated",
-        description: `Your name has been updated to "${data.user.name}"`,
-      })
-
-      // Trigger session refresh to update all UI components
-      await updateSession()
-      
-      // Force a router refresh to re-render server components
-      router.refresh()
-    } catch (error) {
-      console.error("Profile update error:", error)
-      toast({
-        variant: "destructive",
-        title: "Update Failed",
-        description: error instanceof Error ? error.message : "Failed to update profile. Please try again.",
-      })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -129,7 +76,7 @@ export default function CustomerProfile() {
   }
 
   return (
-    <div className="space-y-6" key={refreshKey}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -177,7 +124,6 @@ export default function CustomerProfile() {
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <Input
-                    key={`name-${refreshKey}`}
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -314,7 +260,7 @@ export default function CustomerProfile() {
         {/* Profile Summary */}
         <div className="space-y-6">
           {/* Profile Card */}
-          <Card key={`profile-${refreshKey}`}>
+          <Card>
             <CardContent className="p-6">
               <div className="text-center space-y-4">
                 <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto">

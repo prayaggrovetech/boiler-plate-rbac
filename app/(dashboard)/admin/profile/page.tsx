@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,9 +21,11 @@ import {
     Settings
 } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { useProfileUpdate } from "@/hooks/use-profile-update"
 
 export default function AdminProfile() {
     const { data: session } = useSession()
+    const { updateProfile, isLoading } = useProfileUpdate()
     const [isEditing, setIsEditing] = useState(false)
     const [formData, setFormData] = useState({
         name: session?.user?.name || "",
@@ -33,11 +35,34 @@ export default function AdminProfile() {
         bio: ""
     })
 
-    const handleSave = () => {
-        // Here you would typically save to the API
-        console.log("Saving profile data:", formData)
-        setIsEditing(false)
-        // Add toast notification here
+    // Update form data when session changes
+    useEffect(() => {
+        if (session?.user) {
+            setFormData(prev => ({
+                ...prev,
+                name: session.user.name || "",
+                email: session.user.email || "",
+            }))
+        }
+    }, [session])
+
+    const handleSave = async () => {
+        const result = await updateProfile({
+            name: formData.name,
+            phone: formData.phone,
+            location: formData.location,
+            bio: formData.bio,
+        })
+
+        if (result.success && result.data) {
+            // Update local form data with the API response
+            setFormData(prev => ({
+                ...prev,
+                name: result.data.name,
+                email: result.data.email,
+            }))
+            setIsEditing(false)
+        }
     }
 
     const handleCancel = () => {
@@ -64,12 +89,12 @@ export default function AdminProfile() {
                 <div className="flex gap-3">
                     {isEditing ? (
                         <>
-                            <Button variant="outline" onClick={handleCancel}>
+                            <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
                                 Cancel
                             </Button>
-                            <Button onClick={handleSave}>
+                            <Button onClick={handleSave} disabled={isLoading}>
                                 <Save className="h-4 w-4 mr-2" />
-                                Save Changes
+                                {isLoading ? "Saving..." : "Save Changes"}
                             </Button>
                         </>
                     ) : (

@@ -115,20 +115,45 @@ export const authConfig: NextAuthConfig = {
         return false
       }
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       // Initial sign in
       if (user) {
-        token.id = user.id
+        token.id = user.id as string
+        token.name = user.name || null
+        token.email = user.email || null
+        token.image = user.image || null
         
         // For credentials provider, roles are already attached
         if (account?.provider === "credentials" && "roles" in user) {
-          token.roles = user.roles
+          token.roles = user.roles as any[]
         } else {
           // For OAuth providers, fetch roles from database
           const userWithRoles = await getUserWithRoles(user.id!)
           if (userWithRoles) {
             const transformedUser = transformDatabaseUser(userWithRoles)
-            token.roles = transformedUser.roles
+            token.roles = transformedUser.roles as any[]
+          }
+        }
+      }
+
+      // Handle session update trigger
+      if (trigger === "update") {
+        // Fetch fresh user data from database
+        if (token.id) {
+          const freshUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            }
+          })
+
+          if (freshUser) {
+            token.name = freshUser.name
+            token.email = freshUser.email
+            token.image = freshUser.image
           }
         }
       }
@@ -145,9 +170,12 @@ export const authConfig: NextAuthConfig = {
       return token
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.user.id = token.id as string
-        session.user.roles = token.roles as any[] || []
+        session.user.name = (token.name as string) || ""
+        session.user.email = (token.email as string) || ""
+        session.user.image = (token.image as string) || null
+        session.user.roles = (token.roles as any[]) || []
         
         // Add permissions to session for easy access
         const permissions = new Set<string>()
@@ -190,8 +218,8 @@ export const authConfig: NextAuthConfig = {
     async signIn({ user, account, isNewUser }) {
       console.log(`User ${user.email} signed in via ${account?.provider}`)
     },
-    async signOut({ session }) {
-      console.log(`User ${session?.user?.email} signed out`)
+    async signOut() {
+      console.log(`User signed out`)
     }
   },
   debug: process.env.NODE_ENV === "development",
