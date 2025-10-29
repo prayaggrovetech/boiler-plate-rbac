@@ -1,4 +1,4 @@
-import { transporter, emailConfig } from "./config"
+import { createTransporter } from "./config"
 
 interface SendEmailOptions {
   to: string
@@ -9,8 +9,10 @@ interface SendEmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   try {
+    const { transporter, from } = await createTransporter()
+    
     const info = await transporter.sendMail({
-      from: `"${emailConfig.from.name}" <${emailConfig.from.email}>`,
+      from: `"${from.name}" <${from.email}>`,
       to,
       subject,
       html,

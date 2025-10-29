@@ -341,6 +341,14 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     roles: ['admin'],
     section: 'system'
   },
+  {
+    path: '/admin/email-settings',
+    title: 'Email Settings',
+    icon: 'Mail',
+    permissions: ['view:settings'],
+    roles: ['admin'],
+    section: 'system'
+  },
 
   // Admin/Manager profile
   {

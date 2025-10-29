@@ -144,3 +144,20 @@ model EmailTemplate {
 
   @@map("email_templates")
 }
+
+// SMTP Settings Model
+model SmtpSettings {
+  id        String   @id @default(cuid())
+  host      String   @default("smtp.gmail.com")
+  port      Int      @default(587)
+  secure    Boolean  @default(false)
+  user      String
+  password  String   // Encrypted in production
+  fromName  String   @default("Micro SaaS")
+  fromEmail String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("smtp_settings")
+}

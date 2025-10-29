@@ -24,6 +24,7 @@ import {
   BarChart3, 
   FileText,
   Activity,
+  Mail,
   LucideIcon
 } from "lucide-react"
 
@@ -54,7 +55,8 @@ const iconMap: Record<string, LucideIcon> = {
   CreditCard,
   BarChart3,
   FileText,
-  Activity
+  Activity,
+  Mail
 }
 
 interface IconComponentProps {
