@@ -262,6 +262,11 @@ export interface RouteMetadata {
   permissions: string[]
   roles?: string[]
   children?: RouteMetadata[]
+  badge?: {
+    count?: number
+    variant?: 'default' | 'urgent' | 'info'
+  }
+  section?: string
 }
 
 export const NAVIGATION_ROUTES: RouteMetadata[] = [
@@ -271,65 +276,80 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     title: 'Dashboard',
     icon: 'LayoutDashboard',
     permissions: [],
-    roles: ['admin', 'manager', 'customer']
+    roles: ['admin', 'manager', 'customer'],
+    section: 'main'
   },
 
-  // Admin routes
+  // Admin routes - Management section
   {
     path: '/admin/users',
     title: 'User Management',
     icon: 'Users',
     permissions: ['view:users'],
-    roles: ['admin', 'manager']
+    roles: ['admin', 'manager'],
+    section: 'management'
   },
   {
     path: '/admin/roles',
     title: 'Roles & Permissions',
     icon: 'Shield',
     permissions: ['view:roles'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'management'
   },
+
+  // Admin routes - Analytics section
   {
     path: '/admin/analytics',
     title: 'Analytics',
     icon: 'BarChart3',
     permissions: ['view:analytics'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'analytics'
   },
   {
     path: '/admin/audit-logs',
     title: 'Audit Logs',
     icon: 'FileText',
     permissions: ['view:audit'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'analytics'
   },
+
+  // Admin routes - System section
   {
     path: '/admin/system-health',
     title: 'System Health',
     icon: 'Activity',
     permissions: ['view:system'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'system'
   },
   {
     path: '/admin/billing',
     title: 'Billing Overview',
     icon: 'CreditCard',
     permissions: ['view:billing'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'system'
   },
   {
     path: '/admin/settings',
     title: 'System Settings',
     icon: 'Settings',
     permissions: ['view:settings'],
-    roles: ['admin']
+    roles: ['admin'],
+    section: 'system'
   },
+
+  // Admin/Manager profile
   {
     path: '/admin/profile',
     title: 'Profile',
     icon: 'User',
     permissions: [],
-    roles: ['admin', 'manager']
+    roles: ['admin', 'manager'],
+    section: 'account'
   },
 
   // Manager routes
@@ -338,14 +358,16 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     title: 'Team Management',
     icon: 'Users',
     permissions: ['view:users'],
-    roles: ['manager']
+    roles: ['manager'],
+    section: 'management'
   },
   {
     path: '/manager/projects',
     title: 'Projects',
     icon: 'BarChart3',
     permissions: ['view:analytics'],
-    roles: ['manager']
+    roles: ['manager'],
+    section: 'analytics'
   },
 
   // Customer routes
@@ -354,27 +376,40 @@ export const NAVIGATION_ROUTES: RouteMetadata[] = [
     title: 'Profile',
     icon: 'User',
     permissions: ['view:profile'],
-    roles: ['customer']
+    roles: ['customer'],
+    section: 'account'
   },
   {
     path: '/customer/billing',
     title: 'Billing',
     icon: 'CreditCard',
     permissions: ['view:subscription'],
-    roles: ['customer']
+    roles: ['customer'],
+    section: 'account'
   },
   {
     path: '/customer/analytics',
     title: 'Analytics',
     icon: 'BarChart3',
     permissions: ['view:profile'],
-    roles: ['customer']
+    roles: ['customer'],
+    section: 'analytics'
   },
   {
     path: '/customer/reports',
     title: 'Reports',
     icon: 'FileText',
     permissions: ['view:profile'],
-    roles: ['customer']
+    roles: ['customer'],
+    section: 'analytics'
   }
 ]
+
+// Section configuration with titles and order
+export const NAVIGATION_SECTIONS: Record<string, { title?: string; order: number }> = {
+  main: { order: 0 },
+  management: { title: 'Management', order: 1 },
+  analytics: { title: 'Analytics', order: 2 },
+  system: { title: 'System', order: 3 },
+  account: { title: 'Account', order: 4 }
+}

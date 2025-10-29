@@ -18,8 +18,8 @@ export default function CustomerBilling() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Billing & Subscription</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Billing & Subscription</h1>
+            <p className="text-gray-600 mt-2 dark:text-gray-400">
               Manage your subscription, billing, and payment methods
             </p>
           </div>

@@ -19,8 +19,8 @@ export default function CustomerAnalytics() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Usage Analytics</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Usage Analytics</h1>
+            <p className="text-gray-600 mt-2 dark:text-gray-400">
               Detailed insights into your account usage and performance
             </p>
           </div>

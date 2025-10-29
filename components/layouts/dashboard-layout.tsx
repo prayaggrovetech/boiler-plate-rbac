@@ -45,6 +45,8 @@ import {
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme"
 import { cn } from "@/lib/utils"
+import { useSidebarState } from "./hooks/use-sidebar-state"
+import { useKeyboardNavigation } from "./hooks/use-keyboard-navigation"
 
 export interface DashboardLayoutProps {
   children: React.ReactNode
@@ -52,21 +54,32 @@ export interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const { collapsed: sidebarCollapsed, toggleCollapsed } = useSidebarState(false)
+
+  // Handle keyboard navigation (Escape to close mobile sidebar)
+  useKeyboardNavigation({
+    onEscape: () => {
+      if (sidebarOpen) {
+        setSidebarOpen(false)
+      }
+    },
+    enabled: sidebarOpen
+  })
 
   return (
     <div className="min-h-screen bg-background flex w-full overflow-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity duration-300 ease-in-out"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 bg-card shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
+        "fixed inset-y-0 left-0 z-50 bg-card border-r shadow-sm transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full",
         sidebarCollapsed ? "lg:w-16" : "lg:w-64",
         "w-64" // Mobile width
@@ -74,18 +87,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <DashboardSidebar
           onClose={() => setSidebarOpen(false)}
           collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onToggleCollapse={toggleCollapsed}
         />
       </div>
 
       {/* Main content */}
-      <div className="flex-1 w-full min-w-0">
+      <div className="flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <DashboardHeader
           onMenuClick={() => setSidebarOpen(true)}
           sidebarCollapsed={sidebarCollapsed}
         />
-        <main className="py-4">
-          <div className="w-full px-4">
+        <main className="py-6">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
             <DashboardBreadcrumbs />
             <div className="w-full">
               {children}
@@ -107,18 +120,18 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
   const { data: session } = useSession()
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-card">
       {/* Logo */}
       <div className={cn(
         "flex h-16 items-center border-b transition-all duration-300",
-        collapsed ? "justify-center px-2" : "justify-between px-6"
+        collapsed ? "justify-center px-3" : "justify-between px-6"
       )}>
         <Link href="/" className={cn(
-          "flex items-center",
-          collapsed ? "space-x-0" : "space-x-2"
+          "flex items-center transition-all duration-200 hover:opacity-80",
+          collapsed ? "space-x-0" : "space-x-3"
         )}>
-          <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm">MS</span>
+          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+            <span className="text-primary-foreground font-bold text-sm">MS</span>
           </div>
           {!collapsed && (
             <span className="font-bold text-xl text-foreground whitespace-nowrap">Micro SaaS</span>
@@ -127,7 +140,7 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
         {!collapsed && (
           <button
             onClick={onClose}
-            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-foreground"
+            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
           >
             <X className="h-5 w-5" />
           </button>
@@ -141,13 +154,15 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
       )}>
         <button
           onClick={onToggleCollapse}
-          className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150 hover:scale-105 active:scale-95"
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!collapsed}
         >
           {collapsed ? (
-            <PanelLeft className="h-4 w-4" />
+            <PanelLeft className="h-4 w-4 transition-transform duration-200" />
           ) : (
-            <PanelLeftClose className="h-4 w-4" />
+            <PanelLeftClose className="h-4 w-4 transition-transform duration-200" />
           )}
         </button>
       </div>
@@ -160,44 +175,53 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
         )}>
           {collapsed ? (
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
-                  <div className="flex justify-center cursor-pointer">
-                    <Avatar className="h-10 w-10">
+                  <div className="flex justify-center cursor-pointer hover:opacity-80 transition-opacity duration-150">
+                    <Avatar className="h-8 w-8 ring-2 ring-border">
                       <AvatarImage src={session.user.image || undefined} />
-                      <AvatarFallback>
+                      <AvatarFallback className="text-xs font-semibold">
                         {session.user.name?.charAt(0) || session.user.email?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="right">
-                  <div className="text-sm">
-                    <p className="font-medium">{session.user.name || "Unknown User"}</p>
-                    <p className="text-muted-foreground">{session.user.email}</p>
+                <TooltipContent side="right" className="p-3">
+                  <div className="text-sm space-y-1">
+                    <p className="font-semibold">{session.user.name || "Unknown User"}</p>
+                    <p className="text-muted-foreground text-xs">{session.user.email}</p>
+                    {session.user.roles && session.user.roles.length > 0 && (
+                      <div className="flex gap-1 mt-2">
+                        {session.user.roles.slice(0, 2).map((role: any) => (
+                          <Badge key={role.id} variant="secondary" className="text-xs">
+                            {role.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           ) : (
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-10 w-10 flex-shrink-0">
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-accent/50 transition-colors duration-150 cursor-pointer">
+              <Avatar className="h-10 w-10 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src={session.user.image || undefined} />
-                <AvatarFallback>
+                <AvatarFallback className="text-sm font-semibold">
                   {session.user.name?.charAt(0) || session.user.email?.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {session.user.name || "Unknown User"}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
                   {session.user.email}
                 </p>
                 {session.user.roles && session.user.roles.length > 0 && (
-                  <div className="flex gap-1 mt-1 flex-wrap">
+                  <div className="flex gap-1 mt-1.5 flex-wrap">
                     {session.user.roles.slice(0, 2).map((role: any) => (
-                      <Badge key={role.id} variant="secondary" className="text-xs">
+                      <Badge key={role.id} variant="secondary" className="text-xs px-2 py-0">
                         {role.name}
                       </Badge>
                     ))}
@@ -210,13 +234,24 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
       )}
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-4">
-        <RoleBasedNavigation
-          className={collapsed ? "px-2" : "px-4"}
-          itemClassName="mb-1"
-          showIcons={true}
-          collapsed={collapsed}
-        />
+      <div className="flex-1 relative overflow-hidden">
+        {/* Top fade */}
+        <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-card to-transparent pointer-events-none z-10" />
+        
+        <nav 
+          className="h-full overflow-y-auto py-4 px-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+          aria-label="Main navigation"
+        >
+          <RoleBasedNavigation
+            className={collapsed ? "space-y-1" : "space-y-1 px-2"}
+            itemClassName=""
+            showIcons={true}
+            collapsed={collapsed}
+          />
+        </nav>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
       </div>
 
       {/* Footer */}
@@ -224,18 +259,18 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
         "border-t transition-all duration-300",
         collapsed ? "p-2" : "p-4"
       )}>
-        <div className="space-y-2">
+        <div className="space-y-1">
           {collapsed ? (
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-center p-2"
+                    className="w-full justify-center p-2 hover:bg-accent transition-all duration-150 hover:scale-105 active:scale-95"
                     asChild
                   >
-                    <Link href="/settings">
+                    <Link href="/settings" aria-label="Settings">
                       <Settings className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -244,13 +279,14 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
                   <p>Settings</p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
+              <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-center p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                    className="w-full justify-center p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950 transition-all duration-150 hover:scale-105 active:scale-95"
                     onClick={() => signOut({ callbackUrl: "/" })}
+                    aria-label="Sign out"
                   >
                     <LogOut className="h-4 w-4" />
                   </Button>
@@ -262,20 +298,25 @@ function DashboardSidebar({ onClose, collapsed, onToggleCollapse }: DashboardSid
             </TooltipProvider>
           ) : (
             <>
-              <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full justify-start hover:bg-accent transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]" 
+                asChild
+              >
                 <Link href="/settings">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                  <Settings className="h-4 w-4 mr-3" />
+                  <span className="text-sm font-medium">Settings</span>
                 </Link>
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]"
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
+                <LogOut className="h-4 w-4 mr-3" />
+                <span className="text-sm font-medium">Sign Out</span>
               </Button>
             </>
           )}
@@ -465,6 +506,8 @@ interface UserMenuProps {
 }
 
 function UserMenu({ user }: UserMenuProps) {
+  const [open, setOpen] = React.useState(false)
+
   // Determine the role prefix for navigation
   const getRolePrefix = () => {
     if (!user.roles || user.roles.length === 0) return 'customer'
@@ -481,8 +524,12 @@ function UserMenu({ user }: UserMenuProps) {
   const profilePath = `/${rolePrefix}/profile`
   const settingsPath = '/settings' // Settings is now universal
 
+  const handleNavigation = () => {
+    setOpen(false)
+  }
+
   return (
-    <Modal>
+    <Modal open={open} onOpenChange={setOpen}>
       <ModalTrigger asChild>
         <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-accent">
           <Avatar className="h-8 w-8">
@@ -530,14 +577,26 @@ function UserMenu({ user }: UserMenuProps) {
 
           {/* Menu Items */}
           <div className="space-y-2">
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full justify-start" 
+              asChild
+              onClick={handleNavigation}
+            >
               <Link href={profilePath}>
                 <User className="h-4 w-4 mr-2" />
                 View Profile
               </Link>
             </Button>
 
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full justify-start" 
+              asChild
+              onClick={handleNavigation}
+            >
               <Link href={settingsPath}>
                 <Settings className="h-4 w-4 mr-2" />
                 Account Settings
@@ -550,7 +609,10 @@ function UserMenu({ user }: UserMenuProps) {
               variant="ghost"
               size="sm"
               className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => {
+                setOpen(false)
+                signOut({ callbackUrl: "/" })
+              }}
             >
               <LogOut className="h-4 w-4 mr-2" />
               Sign Out
