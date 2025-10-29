@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import crypto from "crypto"
 import { z } from "zod"
+import { sendEmail } from "@/lib/email/send"
+import { renderEmailTemplate } from "@/lib/email/template-renderer"
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -46,13 +48,19 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // TODO: Send email with reset link
-    // For now, we'll just log it (in production, use a service like SendGrid, Resend, etc.)
+    // Send password reset email using dynamic template
     const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
-    console.log("Password reset URL:", resetUrl)
+    const emailTemplate = await renderEmailTemplate("password_reset", {
+      userName: user.name || "User",
+      resetUrl,
+    })
     
-    // In production, you would send an email here:
-    // await sendPasswordResetEmail(email, resetUrl)
+    await sendEmail({
+      to: email,
+      subject: emailTemplate.subject,
+      html: emailTemplate.html,
+      text: emailTemplate.text,
+    })
 
     return NextResponse.json(
       { message: "If an account exists, a reset link has been sent." },
