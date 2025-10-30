@@ -299,8 +299,8 @@ export default function AdminProfile() {
                     <Card>
                         <CardContent className="p-6">
                             <div className="text-center space-y-4">
-                                <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                                    <User className="h-12 w-12 text-blue-600" />
+                                <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto">
+                                    <User className="h-12 w-12 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-lg text-foreground">{session?.user?.name || "Admin User"}</h3>

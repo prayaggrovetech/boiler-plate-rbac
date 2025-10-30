@@ -7,13 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { 
   Settings, 
-  Mail, 
   Shield, 
   Database, 
-  Globe, 
   Bell, 
-  Key, 
-  Server,
+  Key,
   Save,
   RefreshCw
 } from "lucide-react"
@@ -92,65 +89,6 @@ export default function AdminSettingsPage() {
                 <option value="Europe/London">London</option>
               </select>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Email Configuration */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Mail className="h-5 w-5" />
-            Email Configuration
-          </CardTitle>
-          <CardDescription>
-            SMTP settings and email delivery configuration
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="smtp-host">SMTP Host</Label>
-              <Input
-                id="smtp-host"
-                defaultValue="smtp.mailgun.org"
-                placeholder="Enter SMTP host"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="smtp-port">SMTP Port</Label>
-              <Input
-                id="smtp-port"
-                type="number"
-                defaultValue="587"
-                placeholder="Enter SMTP port"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="smtp-username">SMTP Username</Label>
-              <Input
-                id="smtp-username"
-                defaultValue="postmaster@mg.microsaas.com"
-                placeholder="Enter SMTP username"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="smtp-password">SMTP Password</Label>
-              <Input
-                id="smtp-password"
-                type="password"
-                defaultValue="••••••••••••"
-                placeholder="Enter SMTP password"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="text-green-700 bg-green-100">
-              Connected
-            </Badge>
-            <Button variant="outline" size="sm">
-              Test Connection
-            </Button>
           </div>
         </CardContent>
       </Card>

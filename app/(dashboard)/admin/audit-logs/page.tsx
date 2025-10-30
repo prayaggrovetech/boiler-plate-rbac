@@ -15,8 +15,8 @@ export default function AdminAuditLogsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Audit Logs</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">Audit Logs</h1>
+          <p className="text-muted-foreground mt-2">
             Track system events, user actions, and security incidents.
           </p>
         </div>
@@ -38,7 +38,7 @@ export default function AdminAuditLogsPage() {
           <div className="flex gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search audit logs..."
                   className="pl-10"
@@ -164,7 +164,7 @@ export default function AdminAuditLogsPage() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           Showing 1-8 of 15,234 entries
         </p>
         <div className="flex gap-2">
@@ -190,10 +190,10 @@ interface StatCardProps {
 
 function StatCard({ title, value, subtitle, icon, color }: StatCardProps) {
   const colorClasses = {
-    blue: "text-blue-600 bg-blue-100",
-    red: "text-red-600 bg-red-100",
-    green: "text-green-600 bg-green-100",
-    purple: "text-purple-600 bg-purple-100"
+    blue: "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30",
+    red: "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30",
+    green: "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30",
+    purple: "text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30"
   }[color]
 
   return (
@@ -201,9 +201,9 @@ function StatCard({ title, value, subtitle, icon, color }: StatCardProps) {
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
-            <p className="text-sm text-gray-500">{subtitle}</p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
+            <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
           <div className={`p-3 rounded-lg ${colorClasses}`}>
             {icon}
@@ -225,9 +225,9 @@ interface AuditLogEntryProps {
 
 function AuditLogEntry({ timestamp, event, user, details, severity, category }: AuditLogEntryProps) {
   const severityColor = {
-    info: "bg-blue-100 text-blue-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    error: "bg-red-100 text-red-800"
+    info: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400",
+    warning: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400",
+    error: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
   }[severity]
 
   const categoryIcon = {
@@ -240,19 +240,19 @@ function AuditLogEntry({ timestamp, event, user, details, severity, category }: 
   }[category] || <FileText className="h-4 w-4" />
 
   return (
-    <div className="flex items-start gap-4 p-4 border rounded-lg hover:bg-gray-50">
-      <div className="text-gray-400 mt-1">
+    <div className="flex items-start gap-4 p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+      <div className="text-muted-foreground mt-1">
         {categoryIcon}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h4 className="font-medium text-gray-900">{event}</h4>
+          <h4 className="font-medium text-foreground">{event}</h4>
           <Badge className={`text-xs ${severityColor}`}>
             {severity}
           </Badge>
         </div>
-        <p className="text-sm text-gray-600 mb-1">{details}</p>
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <p className="text-sm text-muted-foreground mb-1">{details}</p>
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span>User: {user}</span>
           <span>Time: {timestamp}</span>
           <span>Category: {category}</span>

@@ -14,8 +14,8 @@ export default function AdminSystemHealthPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">System Health</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">System Health</h1>
+          <p className="text-muted-foreground mt-2">
             Monitor system performance, infrastructure status, and service health.
           </p>
         </div>
@@ -31,19 +31,19 @@ export default function AdminSystemHealthPage() {
       </div>
 
       {/* Overall Status */}
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-900/20">
         <CardContent className="p-6">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-green-100 rounded-full">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/40 rounded-full">
+              <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-green-900">All Systems Operational</h2>
-              <p className="text-green-700">All services are running normally with no detected issues.</p>
+              <h2 className="text-xl font-bold text-green-900 dark:text-green-100">All Systems Operational</h2>
+              <p className="text-green-700 dark:text-green-300">All services are running normally with no detected issues.</p>
             </div>
             <div className="ml-auto text-right">
-              <p className="text-sm text-green-600">Uptime</p>
-              <p className="text-2xl font-bold text-green-900">99.98%</p>
+              <p className="text-sm text-green-600 dark:text-green-400">Uptime</p>
+              <p className="text-2xl font-bold text-green-900 dark:text-green-100">99.98%</p>
             </div>
           </div>
         </CardContent>
@@ -227,21 +227,21 @@ interface ServiceStatusCardProps {
 function ServiceStatusCard({ name, status, uptime, responseTime, icon }: ServiceStatusCardProps) {
   const statusConfig = {
     operational: {
-      color: "text-green-600",
-      bg: "bg-green-100",
-      badge: "bg-green-100 text-green-800",
+      color: "text-green-600 dark:text-green-400",
+      bg: "bg-green-100 dark:bg-green-900/30",
+      badge: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400",
       label: "Operational"
     },
     degraded: {
-      color: "text-yellow-600",
-      bg: "bg-yellow-100",
-      badge: "bg-yellow-100 text-yellow-800",
+      color: "text-yellow-600 dark:text-yellow-400",
+      bg: "bg-yellow-100 dark:bg-yellow-900/30",
+      badge: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400",
       label: "Degraded"
     },
     outage: {
-      color: "text-red-600",
-      bg: "bg-red-100",
-      badge: "bg-red-100 text-red-800",
+      color: "text-red-600 dark:text-red-400",
+      bg: "bg-red-100 dark:bg-red-900/30",
+      badge: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400",
       label: "Outage"
     }
   }[status]
@@ -259,8 +259,8 @@ function ServiceStatusCard({ name, status, uptime, responseTime, icon }: Service
             {statusConfig.label}
           </Badge>
         </div>
-        <h3 className="font-semibold text-gray-900 mb-2">{name}</h3>
-        <div className="space-y-1 text-sm text-gray-600">
+        <h3 className="font-semibold text-foreground mb-2">{name}</h3>
+        <div className="space-y-1 text-sm text-muted-foreground">
           <div className="flex justify-between">
             <span>Uptime:</span>
             <span className="font-medium">{uptime}</span>
@@ -284,24 +284,24 @@ interface ResourceUsageProps {
 
 function ResourceUsage({ label, percentage, status, details }: ResourceUsageProps) {
   const statusColor = {
-    good: "bg-green-500",
-    warning: "bg-yellow-500",
-    critical: "bg-red-500"
+    good: "bg-green-500 dark:bg-green-600",
+    warning: "bg-yellow-500 dark:bg-yellow-600",
+    critical: "bg-red-500 dark:bg-red-600"
   }[status]
 
   return (
     <div>
       <div className="flex justify-between text-sm mb-2">
-        <span className="font-medium">{label}</span>
-        <span className="text-gray-600">{percentage}%</span>
+        <span className="font-medium text-foreground">{label}</span>
+        <span className="text-muted-foreground">{percentage}%</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
+      <div className="w-full bg-muted rounded-full h-2 mb-1">
         <div 
           className={`h-2 rounded-full ${statusColor}`}
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
-      <p className="text-xs text-gray-500">{details}</p>
+      <p className="text-xs text-muted-foreground">{details}</p>
     </div>
   )
 }
@@ -315,16 +315,16 @@ interface MetricItemProps {
 
 function MetricItem({ label, value, target, status }: MetricItemProps) {
   const statusColor = {
-    good: "text-green-600",
-    warning: "text-yellow-600",
-    critical: "text-red-600"
+    good: "text-green-600 dark:text-green-400",
+    warning: "text-yellow-600 dark:text-yellow-400",
+    critical: "text-red-600 dark:text-red-400"
   }[status]
 
   return (
     <div className="flex items-center justify-between">
       <div>
-        <p className="font-medium text-gray-900">{label}</p>
-        <p className="text-sm text-gray-500">Target: {target}</p>
+        <p className="font-medium text-foreground">{label}</p>
+        <p className="text-sm text-muted-foreground">Target: {target}</p>
       </div>
       <div className={`text-right ${statusColor}`}>
         <p className="font-bold">{value}</p>
@@ -343,30 +343,30 @@ interface IncidentItemProps {
 
 function IncidentItem({ title, description, status, timestamp, impact }: IncidentItemProps) {
   const statusConfig = {
-    investigating: { color: "bg-red-100 text-red-800", label: "Investigating" },
-    identified: { color: "bg-yellow-100 text-yellow-800", label: "Identified" },
-    monitoring: { color: "bg-blue-100 text-blue-800", label: "Monitoring" },
-    resolved: { color: "bg-green-100 text-green-800", label: "Resolved" },
-    completed: { color: "bg-gray-100 text-gray-800", label: "Completed" }
+    investigating: { color: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400", label: "Investigating" },
+    identified: { color: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400", label: "Identified" },
+    monitoring: { color: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400", label: "Monitoring" },
+    resolved: { color: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400", label: "Resolved" },
+    completed: { color: "bg-muted text-muted-foreground", label: "Completed" }
   }[status]
 
   const impactColor = {
-    low: "text-green-600",
-    medium: "text-yellow-600",
-    high: "text-red-600"
+    low: "text-green-600 dark:text-green-400",
+    medium: "text-yellow-600 dark:text-yellow-400",
+    high: "text-red-600 dark:text-red-400"
   }[impact]
 
   return (
-    <div className="flex items-start gap-4 p-4 border rounded-lg">
+    <div className="flex items-start gap-4 p-4 border border-border rounded-lg">
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
-          <h4 className="font-medium text-gray-900">{title}</h4>
+          <h4 className="font-medium text-foreground">{title}</h4>
           <Badge className={statusConfig.color}>
             {statusConfig.label}
           </Badge>
         </div>
-        <p className="text-sm text-gray-600 mb-2">{description}</p>
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <p className="text-sm text-muted-foreground mb-2">{description}</p>
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span>{timestamp}</span>
           <span className={`font-medium ${impactColor}`}>
             {impact.toUpperCase()} IMPACT

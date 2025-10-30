@@ -154,7 +154,7 @@ export default function RolesManagement() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading roles...</p>
+          <p className="mt-2 text-muted-foreground">Loading roles...</p>
         </div>
       </div>
     )
@@ -165,8 +165,8 @@ export default function RolesManagement() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Role Management</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-foreground">Role Management</h1>
+            <p className="text-muted-foreground mt-2">
               Manage roles and their permissions
             </p>
           </div>
@@ -205,12 +205,12 @@ export default function RolesManagement() {
                     <TableRow key={role.id}>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                            <Shield className="h-4 w-4 text-purple-600" />
+                          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+                            <Shield className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                           </div>
                           <div>
                             <p className="font-medium">{role.name}</p>
-                            <p className="text-sm text-gray-500">{role.id}</p>
+                            <p className="text-sm text-muted-foreground">{role.id}</p>
                           </div>
                         </div>
                       </TableCell>
@@ -226,7 +226,7 @@ export default function RolesManagement() {
                               <Badge variant="outline" className="text-xs">
                                 {resource}
                               </Badge>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted-foreground">
                                 {permissions.length} permissions
                               </span>
                             </div>
@@ -238,7 +238,7 @@ export default function RolesManagement() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-gray-400" />
+                          <Users className="h-4 w-4 text-muted-foreground" />
                           <span className="text-sm">{role.userCount}</span>
                         </div>
                       </TableCell>

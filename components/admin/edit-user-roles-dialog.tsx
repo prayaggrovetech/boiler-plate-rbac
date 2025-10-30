@@ -140,7 +140,7 @@ export function EditUserRolesDialog({
                       <div>
                         <span className="font-medium">{role.name}</span>
                         {role.description && (
-                          <p className="text-gray-500 text-xs">{role.description}</p>
+                          <p className="text-muted-foreground text-xs">{role.description}</p>
                         )}
                       </div>
                     </Label>
@@ -151,7 +151,7 @@ export function EditUserRolesDialog({
 
             {/* Preview of changes */}
             {hasChanges && (
-              <div className="space-y-2 p-3 bg-blue-50 rounded-lg">
+              <div className="space-y-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
                 <Label className="text-sm font-medium">New Role Assignment</Label>
                 <div className="flex flex-wrap gap-2">
                   {selectedRoles.length > 0 ? (

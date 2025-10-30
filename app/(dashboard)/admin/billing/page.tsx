@@ -14,8 +14,8 @@ export default function AdminBillingPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Billing Overview</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">Billing Overview</h1>
+          <p className="text-muted-foreground mt-2">
             Monitor revenue, subscriptions, and billing analytics across the platform.
           </p>
         </div>
@@ -270,9 +270,9 @@ interface RevenueCardProps {
 
 function RevenueCard({ title, value, change, changeType, icon, period }: RevenueCardProps) {
   const changeColor = {
-    positive: "text-green-600",
-    negative: "text-red-600",
-    neutral: "text-gray-600"
+    positive: "text-green-600 dark:text-green-400",
+    negative: "text-red-600 dark:text-red-400",
+    neutral: "text-muted-foreground"
   }[changeType]
 
   return (
@@ -280,11 +280,11 @@ function RevenueCard({ title, value, change, changeType, icon, period }: Revenue
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
             <p className={`text-sm ${changeColor}`}>{change} {period}</p>
           </div>
-          <div className="text-gray-400">
+          <div className="text-muted-foreground">
             {icon}
           </div>
         </div>
@@ -303,22 +303,22 @@ interface PlanMetricProps {
 
 function PlanMetric({ name, subscribers, revenue, percentage, color }: PlanMetricProps) {
   const colorClasses = {
-    purple: "bg-purple-500",
-    blue: "bg-blue-500",
-    green: "bg-green-500"
+    purple: "bg-purple-500 dark:bg-purple-600",
+    blue: "bg-blue-500 dark:bg-blue-600",
+    green: "bg-green-500 dark:bg-green-600"
   }[color]
 
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <span className="font-medium">{name}</span>
-        <span className="text-sm text-gray-600">{revenue}</span>
+        <span className="font-medium text-foreground">{name}</span>
+        <span className="text-sm text-muted-foreground">{revenue}</span>
       </div>
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-500">{subscribers} subscribers</span>
-        <span className="text-sm font-medium">{percentage}%</span>
+        <span className="text-sm text-muted-foreground">{subscribers} subscribers</span>
+        <span className="text-sm font-medium text-foreground">{percentage}%</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-muted rounded-full h-2">
         <div 
           className={`h-2 rounded-full ${colorClasses}`}
           style={{ width: `${percentage}%` }}
@@ -341,18 +341,18 @@ function BillingCycleMetric({ cycle, subscribers, revenue, percentage, discount 
     <div>
       <div className="flex justify-between items-center mb-2">
         <div>
-          <span className="font-medium">{cycle}</span>
-          <span className="text-sm text-gray-500 ml-2">({discount})</span>
+          <span className="font-medium text-foreground">{cycle}</span>
+          <span className="text-sm text-muted-foreground ml-2">({discount})</span>
         </div>
-        <span className="text-sm text-gray-600">{revenue}</span>
+        <span className="text-sm text-muted-foreground">{revenue}</span>
       </div>
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-500">{subscribers} subscribers</span>
-        <span className="text-sm font-medium">{percentage}%</span>
+        <span className="text-sm text-muted-foreground">{subscribers} subscribers</span>
+        <span className="text-sm font-medium text-foreground">{percentage}%</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-muted rounded-full h-2">
         <div 
-          className="h-2 rounded-full bg-blue-500"
+          className="h-2 rounded-full bg-blue-500 dark:bg-blue-600"
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
@@ -372,25 +372,25 @@ interface TransactionItemProps {
 
 function TransactionItem({ id, customer, plan, amount, status, date, method }: TransactionItemProps) {
   const statusConfig = {
-    completed: { color: "bg-green-100 text-green-800", label: "Completed" },
-    pending: { color: "bg-yellow-100 text-yellow-800", label: "Pending" },
-    failed: { color: "bg-red-100 text-red-800", label: "Failed" }
+    completed: { color: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400", label: "Completed" },
+    pending: { color: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400", label: "Pending" },
+    failed: { color: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400", label: "Failed" }
   }[status]
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+    <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
-          <span className="font-medium text-gray-900">{id}</span>
+          <span className="font-medium text-foreground">{id}</span>
           <Badge className={statusConfig.color}>
             {statusConfig.label}
           </Badge>
         </div>
-        <p className="text-sm text-gray-600">{customer} • {plan}</p>
-        <p className="text-xs text-gray-500">{date} • {method}</p>
+        <p className="text-sm text-muted-foreground">{customer} • {plan}</p>
+        <p className="text-xs text-muted-foreground">{date} • {method}</p>
       </div>
       <div className="text-right">
-        <p className="font-bold text-gray-900">{amount}</p>
+        <p className="font-bold text-foreground">{amount}</p>
       </div>
     </div>
   )
@@ -405,16 +405,16 @@ interface PaymentMethodItemProps {
 function PaymentMethodItem({ method, percentage, count }: PaymentMethodItemProps) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm font-medium">{method}</span>
+      <span className="text-sm font-medium text-foreground">{method}</span>
       <div className="flex items-center gap-2">
-        <div className="w-16 bg-gray-200 rounded-full h-2">
+        <div className="w-16 bg-muted rounded-full h-2">
           <div 
-            className="bg-blue-600 h-2 rounded-full" 
+            className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full" 
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
-        <span className="text-sm text-gray-600 w-12">{percentage}%</span>
-        <span className="text-xs text-gray-500">({count})</span>
+        <span className="text-sm text-muted-foreground w-12">{percentage}%</span>
+        <span className="text-xs text-muted-foreground">({count})</span>
       </div>
     </div>
   )
@@ -429,21 +429,21 @@ interface IssueItemProps {
 
 function IssueItem({ type, count, description, severity }: IssueItemProps) {
   const severityColor = {
-    low: "text-green-600",
-    medium: "text-yellow-600",
-    high: "text-red-600"
+    low: "text-green-600 dark:text-green-400",
+    medium: "text-yellow-600 dark:text-yellow-400",
+    high: "text-red-600 dark:text-red-400"
   }[severity]
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-gray-900">{type}</span>
+          <span className="font-medium text-foreground">{type}</span>
           <span className={`text-sm font-medium ${severityColor}`}>
             {count}
           </span>
         </div>
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
     </div>
   )

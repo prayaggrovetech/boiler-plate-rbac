@@ -49,6 +49,7 @@ import {
   Eye,
   EyeOff
 } from "lucide-react"
+import { DeleteUserDialog } from "@/components/admin/delete-user-dialog"
 
 // Mock data for now - will be replaced with real API calls
 const mockUsers = [
@@ -123,6 +124,7 @@ export default function AdminUsersPage() {
   const [selectedRole, setSelectedRole] = useState("all")
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -222,29 +224,15 @@ export default function AdminUsersPage() {
     }
   }
 
-  const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return
+  const handleDeleteUser = (userId: string) => {
+    setUsers(prev => prev.filter(user => user.id !== userId))
+    setDeleteDialogOpen(false)
+    setSelectedUser(null)
+  }
 
-    setLoading(true)
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      setUsers(prev => prev.filter(user => user.id !== userId))
-      
-      toast({
-        title: 'Success',
-        description: 'User deleted successfully'
-      })
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to delete user'
-      })
-    } finally {
-      setLoading(false)
-    }
+  const openDeleteDialog = (user: User) => {
+    setSelectedUser(user)
+    setDeleteDialogOpen(true)
   }
 
   const openEditDialog = (user: User) => {
@@ -263,8 +251,8 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+          <p className="text-muted-foreground mt-2">
             Manage user accounts and role assignments
           </p>
         </div>
@@ -345,12 +333,12 @@ export default function AdminUsersPage() {
                             }))
                           }
                         }}
-                        className="rounded"
+                        className="rounded border-input bg-background text-primary focus:ring-primary"
                       />
                       <Label htmlFor={`create-role-${role.id}`} className="text-sm">
                         {role.name}
                         {role.description && (
-                          <span className="text-gray-500 ml-1">- {role.description}</span>
+                          <span className="text-muted-foreground ml-1">- {role.description}</span>
                         )}
                       </Label>
                     </div>
@@ -377,7 +365,7 @@ export default function AdminUsersPage() {
           <div className="flex gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search users by name or email..."
                   value={searchTerm}
@@ -431,7 +419,7 @@ export default function AdminUsersPage() {
                   <TableCell>
                     <div>
                       <div className="font-medium">{user.name}</div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-sm text-muted-foreground">{user.email}</div>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -464,8 +452,8 @@ export default function AdminUsersPage() {
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600"
+                          onClick={() => openDeleteDialog(user)}
+                          className="text-red-600 dark:text-red-400"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
@@ -516,7 +504,7 @@ export default function AdminUsersPage() {
                     id="edit-active"
                     checked={editForm.isActive}
                     onChange={(e) => setEditForm(prev => ({ ...prev, isActive: e.target.checked }))}
-                    className="rounded"
+                    className="rounded border-input bg-background text-primary focus:ring-primary"
                   />
                   <Label htmlFor="edit-active">Active</Label>
                 </div>
@@ -543,7 +531,7 @@ export default function AdminUsersPage() {
                             }))
                           }
                         }}
-                        className="rounded"
+                        className="rounded border-input bg-background text-primary focus:ring-primary"
                       />
                       <Label htmlFor={`edit-role-${role.id}`} className="text-sm">
                         {role.name}
@@ -565,6 +553,16 @@ export default function AdminUsersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete User Dialog */}
+      {selectedUser && (
+        <DeleteUserDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          user={selectedUser}
+          onUserDeleted={handleDeleteUser}
+        />
+      )}
     </div>
   )
 }

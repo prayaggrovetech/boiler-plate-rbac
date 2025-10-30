@@ -193,14 +193,14 @@ export function CreateUserDialog({
                   <Label htmlFor={role.id} className="text-sm font-normal">
                     {role.name}
                     {role.description && (
-                      <span className="text-gray-500 ml-1">- {role.description}</span>
+                      <span className="text-muted-foreground ml-1">- {role.description}</span>
                     )}
                   </Label>
                 </div>
               ))}
             </div>
             {selectedRoles.length === 0 && (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 No roles selected. User will be assigned the default "customer" role.
               </p>
             )}

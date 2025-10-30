@@ -165,7 +165,7 @@ export function CreateRoleDialog({
           <div className="space-y-4">
             <div>
               <Label>Assign Permissions</Label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Select the permissions this role should have
               </p>
             </div>
@@ -190,9 +190,9 @@ export function CreateRoleDialog({
                         <Label htmlFor={permission.id} className="text-sm font-normal flex-1">
                           <div>
                             <span className="font-medium">{permission.action}</span>
-                            <span className="text-gray-500 ml-1">({permission.name})</span>
+                            <span className="text-muted-foreground ml-1">({permission.name})</span>
                             {permission.description && (
-                              <p className="text-gray-500 text-xs">{permission.description}</p>
+                              <p className="text-muted-foreground text-xs">{permission.description}</p>
                             )}
                           </div>
                         </Label>
@@ -204,7 +204,7 @@ export function CreateRoleDialog({
             </div>
 
             {selectedPermissionObjects.length > 0 && (
-              <div className="p-3 bg-blue-50 rounded-lg">
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
                 <Label className="text-sm font-medium">Selected Permissions ({selectedPermissionObjects.length})</Label>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {selectedPermissionObjects.map((permission) => (
